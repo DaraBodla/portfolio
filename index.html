@@ -291,57 +291,139 @@ canvas.rain{
 .cert-org{font-family:'Space Mono',monospace;font-size:10px;color:rgba(240,232,208,.35);letter-spacing:1px;}
 
 /* ════════════════════════════════════════
-   PROJECTS — COMIC PANELS
+   PROJECTS — COMIC PANELS (ENHANCED)
 ════════════════════════════════════════ */
 #projects{
   background:var(--ink);
   flex-direction:column;
   border-bottom:var(--thick);
+  position:relative;
+  overflow:hidden;
 }
+/* diagonal speed-line watermark */
+#projects::before{
+  content:'';position:absolute;inset:0;
+  background:repeating-linear-gradient(-55deg,transparent 0,transparent 32px,rgba(245,197,24,.018) 32px,rgba(245,197,24,.018) 33px);
+  pointer-events:none;z-index:0;
+}
+/* ghost text */
+#projects::after{
+  content:'CASE FILES';
+  position:absolute;bottom:-30px;right:-20px;
+  font-family:'Bangers',cursive;
+  font-size:clamp(100px,14vw,200px);
+  letter-spacing:8px;color:rgba(245,197,24,.022);
+  pointer-events:none;z-index:0;white-space:nowrap;line-height:1;
+}
+
 .projects-top{
-  padding:52px 52px 32px;
-  border-bottom:3px solid rgba(240,232,208,.08);
-  display:flex;align-items:flex-end;justify-content:space-between;
+  padding:44px 52px 22px;
+  border-bottom:3px solid rgba(245,197,24,.1);
+  display:flex;align-items:center;justify-content:space-between;
+  position:relative;z-index:1;
+  background:linear-gradient(90deg,rgba(245,197,24,.05) 0%,transparent 50%);
 }
-.projects-top .comic-title{color:#fff;font-size:clamp(40px,5vw,64px);}
+.projects-top .comic-title{color:#fff;font-size:clamp(36px,4.5vw,60px);}
 .projects-top .comic-title em{color:var(--yellow);}
+.proj-header-right{display:flex;flex-direction:column;align-items:flex-end;gap:8px;}
 .proj-hint{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:3px;color:rgba(240,232,208,.25);}
+.proj-count-big{font-family:'Bangers',cursive;font-size:68px;color:rgba(245,197,24,.06);letter-spacing:4px;line-height:1;}
 
 .proj-grid{
   display:grid;grid-template-columns:repeat(3,1fr);
+  position:relative;z-index:1;
 }
+
+/* row separator labels */
+.proj-row-label{
+  grid-column:1/-1;
+  display:flex;align-items:center;gap:16px;
+  padding:8px 28px;
+  border-top:1px solid rgba(245,197,24,.07);
+  border-bottom:1px solid rgba(245,197,24,.07);
+  background:rgba(245,197,24,.02);
+}
+.proj-row-label span{font-family:'Bangers',cursive;font-size:10px;letter-spacing:6px;color:rgba(245,197,24,.2);white-space:nowrap;}
+.proj-row-label::after{content:'';flex:1;height:1px;background:rgba(245,197,24,.05);}
+
+/* each card */
 .pcard{
-  padding:36px 36px 28px;
-  border-right:1px solid rgba(240,232,208,.07);
-  border-bottom:1px solid rgba(240,232,208,.07);
-  cursor:pointer;
-  position:relative;overflow:hidden;
+  padding:28px 26px 20px;
+  border-right:2px solid rgba(245,197,24,.07);
+  border-bottom:2px solid rgba(245,197,24,.07);
+  cursor:pointer;position:relative;overflow:hidden;
   transition:background .25s;
+  background:var(--ink);z-index:1;
 }
 .pcard:nth-child(3n){border-right:none;}
-.pcard:hover{background:rgba(240,232,208,.04);}
-/* yellow left accent */
-.pcard::after{content:'';position:absolute;top:0;left:0;width:3px;height:0;background:var(--yellow);transition:height .3s ease;}
-.pcard:hover::after{height:100%;}
-/* action word on hover */
+/* halftone dots on hover */
 .pcard::before{
-  content:attr(data-word);position:absolute;top:50%;left:50%;
-  transform:translate(-50%,-50%) scale(0) rotate(-8deg);
-  font-family:'Bangers',cursive;font-size:48px;color:var(--yellow);
-  text-shadow:3px 3px 0 rgba(0,0,0,.5);letter-spacing:4px;
-  transition:transform .28s cubic-bezier(.34,1.56,.64,1),opacity .25s;
-  opacity:0;pointer-events:none;z-index:4;
+  content:'';position:absolute;inset:0;
+  background-image:radial-gradient(circle,rgba(245,197,24,.07) 1px,transparent 1px);
+  background-size:10px 10px;
+  opacity:0;transition:opacity .3s;pointer-events:none;z-index:0;
 }
-.pcard:hover::before{transform:translate(-50%,-50%) scale(1) rotate(-4deg);opacity:1;}
-.pcard:hover .pbody{opacity:.1;}
-.pbody{transition:opacity .25s;}
-.p-num{font-family:'Space Mono',monospace;font-size:10px;color:rgba(245,197,24,.25);letter-spacing:2px;margin-bottom:12px;}
-.p-name{font-family:'Bangers',cursive;font-size:24px;letter-spacing:2px;color:#fff;margin-bottom:10px;line-height:1.1;}
-.p-desc{font-size:12.5px;line-height:1.75;color:rgba(240,232,208,.5);}
-.p-tags{margin-top:16px;display:flex;flex-wrap:wrap;gap:6px;}
-.ptag{font-family:'Space Mono',monospace;font-size:9px;padding:3px 8px;border:1px solid rgba(245,197,24,.2);color:rgba(245,197,24,.5);letter-spacing:1px;}
-.p-cta{margin-top:20px;font-family:'Bangers',cursive;font-size:13px;letter-spacing:3px;color:rgba(245,197,24,.4);transition:color .2s;}
-.pcard:hover .p-cta{color:var(--yellow);}
+.pcard:hover::before{opacity:1;}
+
+/* corner fold */
+.p-fold{
+  position:absolute;bottom:0;right:0;
+  width:0;height:0;border-style:solid;
+  border-width:0 0 22px 22px;
+  border-color:transparent transparent rgba(245,197,24,.13) transparent;
+  transition:border-width .2s;z-index:3;
+}
+.pcard:hover .p-fold{border-width:0 0 38px 38px;border-color:transparent transparent rgba(245,197,24,.28) transparent;}
+
+/* yellow sweep */
+.p-sweep{position:absolute;inset:0;background:linear-gradient(135deg,rgba(245,197,24,.07) 0%,transparent 55%);opacity:0;transition:opacity .3s;pointer-events:none;}
+.pcard:hover .p-sweep{opacity:1;}
+
+/* left bar */
+.p-bar{position:absolute;top:0;left:0;width:3px;height:0;transition:height .35s cubic-bezier(.4,0,.2,1);}
+.pcard:hover .p-bar{height:100%;}
+
+/* burst */
+.p-burst{
+  position:absolute;top:50%;left:50%;
+  transform:translate(-50%,-50%) scale(0) rotate(-10deg);
+  font-family:'Bangers',cursive;font-size:52px;
+  color:var(--yellow);
+  text-shadow:3px 3px 0 rgba(0,0,0,.7),0 0 40px rgba(245,197,24,.5);
+  letter-spacing:4px;
+  transition:transform .3s cubic-bezier(.34,1.56,.64,1),opacity .22s;
+  opacity:0;pointer-events:none;z-index:6;white-space:nowrap;
+}
+.pcard:hover .p-burst{transform:translate(-50%,-50%) scale(1) rotate(-4deg);opacity:1;}
+.pcard:hover .pbody{opacity:.07;}
+.pbody{transition:opacity .25s;position:relative;z-index:2;}
+
+.p-icon{font-size:22px;margin-bottom:10px;display:block;line-height:1;}
+.p-num{font-family:'Space Mono',monospace;font-size:10px;color:rgba(245,197,24,.28);letter-spacing:3px;margin-bottom:8px;display:flex;align-items:center;gap:8px;}
+.p-num::after{content:'';flex:1;height:1px;background:rgba(245,197,24,.08);}
+.p-name{font-family:'Bangers',cursive;font-size:21px;letter-spacing:2px;color:#fff;margin-bottom:8px;line-height:1.1;}
+.p-desc{font-size:12px;line-height:1.8;color:rgba(240,232,208,.42);}
+.p-tags{margin-top:12px;display:flex;flex-wrap:wrap;gap:5px;}
+.ptag{font-family:'Space Mono',monospace;font-size:9px;padding:3px 8px;border:1px solid rgba(245,197,24,.18);color:rgba(245,197,24,.45);letter-spacing:1px;transition:all .15s;}
+.pcard:hover .ptag{border-color:rgba(245,197,24,.5);color:rgba(245,197,24,.9);}
+.p-cta{margin-top:14px;font-family:'Bangers',cursive;font-size:12px;letter-spacing:3px;color:rgba(245,197,24,.3);transition:color .2s,letter-spacing .2s;display:flex;align-items:center;gap:6px;}
+.p-cta::before{content:'';width:14px;height:1px;background:currentColor;transition:width .2s;}
+.pcard:hover .p-cta{color:var(--yellow);letter-spacing:4px;}
+.pcard:hover .p-cta::before{width:22px;}
+
+/* per-card colours */
+.pcard:nth-child(1){background:linear-gradient(160deg,#0e0e1a 0%,var(--ink) 60%);}
+.pcard:nth-child(1) .p-bar,.pcard:nth-child(5) .p-bar,.pcard:nth-child(9) .p-bar{background:linear-gradient(to bottom,var(--yellow),transparent);}
+.pcard:nth-child(2) .p-bar,.pcard:nth-child(6) .p-bar{background:linear-gradient(to bottom,var(--red),transparent);}
+.pcard:nth-child(2):hover,.pcard:nth-child(6):hover{background:rgba(192,36,26,.04);}
+.pcard:nth-child(3) .p-bar{background:linear-gradient(to bottom,#4f8ef7,transparent);}
+.pcard:nth-child(3):hover{background:rgba(79,142,247,.04);}
+.pcard:nth-child(4) .p-bar{background:linear-gradient(to bottom,#e87722,transparent);}
+.pcard:nth-child(4):hover{background:rgba(232,119,34,.04);}
+.pcard:nth-child(7) .p-bar{background:linear-gradient(to bottom,#8b5cf6,transparent);}
+.pcard:nth-child(7):hover{background:rgba(139,92,246,.05);}
+.pcard:nth-child(8) .p-bar{background:linear-gradient(to bottom,#10b981,transparent);}
+.pcard:nth-child(8):hover{background:rgba(16,185,129,.04);}
 
 /* ════════════════════════════════════════
    PROJECT MODAL
@@ -574,18 +656,91 @@ footer{
 .pg-num{position:absolute;bottom:16px;right:20px;font-family:'Bangers',cursive;font-size:13px;letter-spacing:3px;color:rgba(26,14,10,.25);}
 #hero .pg-num,#projects .pg-num,#contact .pg-num{color:rgba(240,232,208,.12);}
 
+/* ════════════════════════════════
+   MOBILE  ≤768px  — full overhaul
+   (desktop unchanged above this)
+════════════════════════════════ */
 @media(max-width:768px){
-  #hero{grid-template-columns:1fr;}
-  .hero-r{display:none;}
-  #about{grid-template-columns:1fr;}
-  .about-r{display:none;}
-  .skills-top{grid-template-columns:1fr;}
-  .skills-title-box{border-right:none;border-bottom:var(--thick);}
-  .certs-strip{grid-template-columns:repeat(2,1fr);}
-  .proj-grid{grid-template-columns:1fr 1fr;}
-  #contact{grid-template-columns:1fr;}
-  .contact-r{display:none;}
+  /* NAV */
+  nav{padding:0 16px;height:50px;}
+  nav ul{gap:14px;}
+  nav ul a{font-size:13px;letter-spacing:1px;}
   .ndots{display:none;}
+
+  /* HERO */
+  #hero{
+    grid-template-columns:1fr;
+    height:auto;
+    min-height:100vh;
+  }
+  .hero-r{display:none;}
+  .hero-l{
+    padding:80px 24px 60px;
+    min-height:100vh;
+    justify-content:center;
+  }
+  .hero-name{font-size:clamp(60px,18vw,88px);}
+  .hero-desc{font-size:13px;max-width:100%;}
+  .hero-btns{gap:10px;}
+  .btn{font-size:15px;padding:9px 20px;}
+  .scroll-hint{left:24px;}
+
+  /* ABOUT */
+  #about{grid-template-columns:1fr;min-height:auto;}
+  .about-l{padding:52px 24px;}
+  .about-r{display:grid;grid-template-rows:auto auto;}
+  .exp-panel{padding:36px 24px;border-bottom:var(--thick);}
+  .stats-strip{grid-template-columns:repeat(3,1fr);}
+
+  /* SKILLS */
+  .skills-top{grid-template-columns:1fr;}
+  .skills-title-box{border-right:none;border-bottom:var(--thick);padding:36px 24px;}
+  .skills-cloud{padding:28px 20px;gap:10px;}
+  .stag{font-size:14px;padding:8px 14px;}
+  .certs-strip{grid-template-columns:repeat(2,1fr);}
+  .cert{padding:14px 16px;}
+
+  /* PROJECTS */
+  .projects-top{padding:28px 20px 16px;flex-wrap:wrap;gap:8px;}
+  .proj-count-big{font-size:40px;}
+  .proj-grid{grid-template-columns:1fr;}
+  .proj-row-label{padding:8px 16px;}
+  .pcard{padding:20px 18px 16px;border-right:none;}
+  .pcard:nth-child(3n){border-right:none;}
+  .p-name{font-size:20px;}
+  .p-burst{font-size:36px;}
+
+  /* MODAL */
+  .modal{max-height:95vh;}
+  .modal-header{padding:20px 20px 16px;}
+  .modal-title{font-size:28px;}
+  .modal-body{padding:20px;}
+  .modal-close{top:14px;right:14px;}
+
+  /* CONTACT */
+  #contact{grid-template-columns:1fr;min-height:auto;}
+  .contact-l{padding:52px 24px 40px;}
+  .contact-r{
+    display:flex !important;
+    padding:36px 24px;
+    min-height:auto;
+  }
+  .scroll-words{font-size:40px;}
+  footer{padding:12px 24px;}
+
+  /* BAT SIGNAL */
+  .bs-bat{font-size:70px;}
+  .bs-text{font-size:20px;letter-spacing:3px;}
+  .bs-sub{font-size:10px;letter-spacing:2px;}
+}
+
+/* ── very small phones ≤400px ── */
+@media(max-width:400px){
+  nav ul{gap:8px;}
+  nav ul a{font-size:11px;}
+  .hero-name{font-size:clamp(52px,16vw,72px);}
+  .certs-strip{grid-template-columns:1fr;}
+  .stat-big{font-size:38px;}
 }
 
 /* ── HERO PHOTO ── */
@@ -751,7 +906,7 @@ footer{
         <p class="exp-detail">Built WhatsApp automation platform serving 3+ business verticals. Sub-2s latency, live Meta catalogue integration, custom onboarding portal, billing system.</p>
       </div>
       <div class="exp-item rv-r" style="transition-delay:.26s">
-        <div class="exp-co">HACK@GIKI · 2024 PRESENT</div>
+        <div class="exp-co">HACK@GIKI · 2026 PRESENT</div>
         <div class="exp-role">EC MEMBER</div>
         <p class="exp-detail">Organised Hack-Nation × MIT hackathon. Built sponsorship decks, interactive HTML presentations, and "The AI Scientist" project for the World Bank Youth Summit track.</p>
       </div>
@@ -829,97 +984,136 @@ footer{
       <div class="panel-label rv" style="color:rgba(245,197,24,.35)">CASE FILES</div>
       <h2 class="comic-title rv" style="transition-delay:.1s">NOTABLE <em>WORK</em></h2>
     </div>
-    <span class="proj-hint rv">CLICK TO EXPAND</span>
+    <div class="proj-header-right rv">
+      <div class="proj-count-big">09</div>
+      <span class="proj-hint">CLICK TO EXPAND</span>
+    </div>
   </div>
   <div class="proj-grid" id="projGrid">
 
+    <!-- ROW 1 -->
+    <div class="proj-row-label"><span>COMPUTER VISION + NLP</span></div>
+
     <div class="pcard rv" data-word="POW!" data-pid="0" style="transition-delay:.05s">
+      <div class="p-bar"></div><div class="p-sweep"></div><div class="p-fold"></div>
+      <div class="p-burst">POW!</div>
       <div class="pbody">
+        <div class="p-icon">👄</div>
         <div class="p-num">01</div>
         <div class="p-name">LIP FILLER</div>
-        <p class="p-desc">Silent speech recognition. 3D-CNN + MS-TCN + BiLSTM pipeline on 100 class LRW dataset.</p>
+        <p class="p-desc">Silent speech recognition. 3D-CNN + MS-TCN + BiLSTM on 100 class LRW dataset.</p>
         <div class="p-tags"><span class="ptag">3D-CNN</span><span class="ptag">BiLSTM</span><span class="ptag">PyTorch</span></div>
-        <div class="p-cta">READ MORE →</div>
+        <div class="p-cta">READ MORE</div>
       </div>
     </div>
 
     <div class="pcard rv" data-word="ZAP!" data-pid="1" style="transition-delay:.10s">
+      <div class="p-bar"></div><div class="p-sweep"></div><div class="p-fold"></div>
+      <div class="p-burst">ZAP!</div>
       <div class="pbody">
+        <div class="p-icon">🎬</div>
         <div class="p-num">02</div>
         <div class="p-name">MOVIE REVENUE PREDICTOR</div>
-        <p class="p-desc">Full MLOps platform. Ensemble model, FastAPI, Prefect, Docker, GitHub Actions CI/CD.</p>
+        <p class="p-desc">Full MLOps platform. XGBoost ensemble, FastAPI, Prefect, Docker, CI/CD. ROC-AUC 0.80.</p>
         <div class="p-tags"><span class="ptag">MLOps</span><span class="ptag">XGBoost</span><span class="ptag">FastAPI</span></div>
-        <div class="p-cta">READ MORE →</div>
+        <div class="p-cta">READ MORE</div>
       </div>
     </div>
 
     <div class="pcard rv" data-word="BOOM!" data-pid="2" style="transition-delay:.15s">
+      <div class="p-bar"></div><div class="p-sweep"></div><div class="p-fold"></div>
+      <div class="p-burst">BOOM!</div>
       <div class="pbody">
+        <div class="p-icon">🏢</div>
         <div class="p-num">03</div>
         <div class="p-name">CORBIS SOFT INTERNSHIP</div>
         <p class="p-desc">3 AI prototypes in 10 weeks. YOLOv8 floor plans, DQN chess agent, role based ERP.</p>
         <div class="p-tags"><span class="ptag">YOLOv8</span><span class="ptag">DQN</span><span class="ptag">PostgreSQL</span></div>
-        <div class="p-cta">READ MORE →</div>
+        <div class="p-cta">READ MORE</div>
       </div>
     </div>
 
+    <!-- ROW 2 -->
+    <div class="proj-row-label"><span>DETECTION + STARTUP + CLOUD</span></div>
+
     <div class="pcard rv" data-word="WHAM!" data-pid="3" style="transition-delay:.20s">
+      <div class="p-bar"></div><div class="p-sweep"></div><div class="p-fold"></div>
+      <div class="p-burst">WHAM!</div>
       <div class="pbody">
+        <div class="p-icon">🤟</div>
         <div class="p-num">04</div>
         <div class="p-name">ASL SIGN LANGUAGE DETECTOR</div>
-        <p class="p-desc">Faster R-CNN + MobileNetV3 FPN. 87.31% mAP@0.5. Real time FastAPI webcam app.</p>
-        <div class="p-tags"><span class="ptag">Faster R-CNN</span><span class="ptag">FastAPI</span><span class="ptag">mAP 87.31%</span></div>
-        <div class="p-cta">READ MORE →</div>
+        <p class="p-desc">Faster R-CNN + MobileNetV3 FPN. 87.31% mAP@0.5. Real time webcam inference.</p>
+        <div class="p-tags"><span class="ptag">Faster R-CNN</span><span class="ptag">FastAPI</span><span class="ptag">87.31% mAP</span></div>
+        <div class="p-cta">READ MORE</div>
       </div>
     </div>
 
     <div class="pcard rv" data-word="KA-POW!" data-pid="4" style="transition-delay:.25s">
+      <div class="p-bar"></div><div class="p-sweep"></div><div class="p-fold"></div>
+      <div class="p-burst">KA-POW!</div>
       <div class="pbody">
+        <div class="p-icon">💬</div>
         <div class="p-num">05</div>
         <div class="p-name">CPC PLATFORM</div>
-        <p class="p-desc">WhatsApp chatbot SaaS serving 3+ verticals. Meta catalogue, billing, onboarding portal.</p>
+        <p class="p-desc">WhatsApp chatbot SaaS. Meta catalogue, billing, sub-2s latency. 3+ business verticals.</p>
         <div class="p-tags"><span class="ptag">WhatsApp API</span><span class="ptag">Supabase</span><span class="ptag">Startup</span></div>
-        <div class="p-cta">READ MORE →</div>
+        <div class="p-cta">READ MORE</div>
       </div>
     </div>
 
     <div class="pcard rv" data-word="CRASH!" data-pid="5" style="transition-delay:.30s">
+      <div class="p-bar"></div><div class="p-sweep"></div><div class="p-fold"></div>
+      <div class="p-burst">CRASH!</div>
       <div class="pbody">
+        <div class="p-icon">☁️</div>
         <div class="p-num">06</div>
         <div class="p-name">BAYAN AI</div>
-        <p class="p-desc">Serverless AWS pipeline. Step Functions, Lambda, Transcribe, Polly. English to Urdu lectures.</p>
+        <p class="p-desc">Serverless AWS lecture pipeline. Step Functions, Lambda, Transcribe, Polly. English to Urdu.</p>
         <div class="p-tags"><span class="ptag">AWS</span><span class="ptag">Serverless</span><span class="ptag">NLP</span></div>
-        <div class="p-cta">READ MORE →</div>
+        <div class="p-cta">READ MORE</div>
       </div>
     </div>
 
+    <!-- ROW 3 -->
+    <div class="proj-row-label"><span>NETWORKS + HACKATHON + IaC</span></div>
+
     <div class="pcard rv" data-word="BIFF!" data-pid="6" style="transition-delay:.35s">
+      <div class="p-bar"></div><div class="p-sweep"></div><div class="p-fold"></div>
+      <div class="p-burst">BIFF!</div>
       <div class="pbody">
+        <div class="p-icon">📡</div>
         <div class="p-num">07</div>
         <div class="p-name">NETWORK TRAFFIC PREDICTION</div>
-        <p class="p-desc">LSTM on 23 node backbone + AnyLogic. Closed loop QoS controller. 90.6% fewer congestion events.</p>
+        <p class="p-desc">LSTM QoS controller on 23 node backbone. 90.6% fewer congestion events vs reactive baseline.</p>
         <div class="p-tags"><span class="ptag">LSTM</span><span class="ptag">AnyLogic</span><span class="ptag">QoS</span></div>
-        <div class="p-cta">READ MORE →</div>
+        <div class="p-cta">READ MORE</div>
       </div>
     </div>
 
     <div class="pcard rv" data-word="POW!" data-pid="7" style="transition-delay:.40s">
+      <div class="p-bar"></div><div class="p-sweep"></div><div class="p-fold"></div>
+      <div class="p-burst">POW!</div>
       <div class="pbody">
+        <div class="p-icon">🔬</div>
         <div class="p-num">08</div>
         <div class="p-name">THE AI SCIENTIST</div>
-        <p class="p-desc">Next.js hypothesis to experiment pipeline. Built for Hack Nation × World Bank Youth Summit.</p>
+        <p class="p-desc">Hypothesis to experiment pipeline. Semantic Scholar API. Built for World Bank Youth Summit.</p>
         <div class="p-tags"><span class="ptag">Next.js</span><span class="ptag">LLM</span><span class="ptag">Hackathon</span></div>
-        <div class="p-cta">READ MORE →</div>
+        <div class="p-cta">READ MORE</div>
       </div>
     </div>
 
     <div class="pcard rv" data-word="ZAP!" data-pid="8" style="transition-delay:.45s">
+      <div class="p-bar"></div><div class="p-sweep"></div><div class="p-fold"></div>
+      <div class="p-burst">ZAP!</div>
       <div class="pbody">
+        <div class="p-icon">🏗️</div>
         <div class="p-num">09</div>
         <div class="p-name">UNIEVENT (AWS CLOUD)</div>
-        <p class="p-desc">Flask event app on AWS. 473 line CloudFormation template. VPC, EC2×2, ALB, S3. 45min to 5min deploy.</p>
+        <p class="p-desc">Flask event app. 473 line CloudFormation template, 20+ AWS resources. 45min to 5min deploy.</p>
         <div class="p-tags"><span class="ptag">CloudFormation</span><span class="ptag">AWS</span><span class="ptag">IaC</span></div>
-        <div class="p-cta">READ MORE →</div>
+        <div class="p-cta">READ MORE</div>
       </div>
     </div>
 
@@ -1007,7 +1201,7 @@ const PROJECTS = [
   },
   {
     num:'03', title:'CORBIS SOFT INTERNSHIP — 3 AI PROTOTYPES',
-    desc:'AI Intern at Corbis Soft (Pvt.) Ltd., Jun–Aug 2024. Shipped 3 complete end-to-end AI systems in 10 weeks.',
+    desc:'AI Intern at Corbis Soft (Pvt.) Ltd., Jun–Jul 2025. Shipped 3 complete end-to-end AI systems in 10 weeks.',
     bullets:[
       'Dimension Reader: YOLOv8 floor-plan region detection + OCR text extraction pipeline. mAP@0.5 = 0.812',
       'Python Chess DQN Agent: Deep Q-Learning RL agent. Win rate 0.00 → 0.437, Avg Reward −2.70 → 58.67, Game Length 14 → 74.8 over 300 episodes',
