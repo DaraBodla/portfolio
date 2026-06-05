@@ -476,13 +476,23 @@ canvas.rain{
 ════════════════════════════════════════ */
 .modal-bg{
   position:fixed;inset:0;
-  background:rgba(0,0,0,.85);
-  backdrop-filter:blur(6px);
+  background:rgba(0,0,0,.88);
+  /* NO backdrop-filter — it repaints the entire page on every frame */
   z-index:8500;
-  display:none;align-items:center;justify-content:center;
+  display:flex;align-items:center;justify-content:center;
   padding:24px;
+  /* opacity transition instead of display toggle — GPU composited */
+  opacity:0;
+  pointer-events:none;
+  transition:opacity .2s ease;
+  /* own compositor layer so it never triggers page repaints */
+  will-change:opacity;
+  transform:translateZ(0);
 }
-.modal-bg.open{display:flex;}
+.modal-bg.open{
+  opacity:1;
+  pointer-events:auto;
+}
 .modal{
   background:var(--panel);
   border:var(--thick);
@@ -490,9 +500,17 @@ canvas.rain{
   max-width:740px;width:100%;max-height:90vh;
   overflow-y:auto;
   position:relative;
-  animation:modalIn .3s cubic-bezier(.34,1.56,.64,1);
+  /* simple translateY instead of scale+rotate — avoids layout recalc */
+  transform:translateY(20px);
+  transition:transform .22s cubic-bezier(.4,0,.2,1);
+  /* paint containment — scrolling inside won't repaint the backdrop */
+  contain:layout style;
+  will-change:transform;
 }
-@keyframes modalIn{from{transform:scale(.85) rotate(-2deg);opacity:0;}to{transform:none;opacity:1;}}
+.modal-bg.open .modal{
+  transform:translateY(0);
+}
+@keyframes modalIn{from{transform:translateY(20px);opacity:0;}to{transform:none;opacity:1;}}
 .modal-header{
   background:var(--ink);
   padding:28px 32px 24px;
@@ -509,12 +527,17 @@ canvas.rain{
   padding:4px 12px;transition:all .2s;
 }
 .modal-close:hover{color:var(--yellow);border-color:var(--yellow);}
-.modal-body{padding:32px;}
+.modal-body{padding:32px;contain:layout style;overflow-anchor:none;}
 .modal-desc{font-size:14px;line-height:1.85;color:rgba(26,14,10,.75);margin-bottom:24px;}
 .modal-section{margin-bottom:20px;}
-.modal-section-title{font-family:'Bangers',cursive;font-size:18px;letter-spacing:3px;color:var(--outline);margin-bottom:10px;padding-bottom:6px;border-bottom:2px solid rgba(26,14,10,.15);}
+.modal-section-title{font-family:'Bangers',cursive;font-size:18px;letter-spacing:3px;color:var(--outline);margin-bottom:10px;padding-bottom:6px;border-bottom:2px solid rgba(26,14,10,.15);contain:layout;}
 .modal-bullets{list-style:none;display:flex;flex-direction:column;gap:8px;}
-.modal-bullets li{font-size:13px;line-height:1.7;color:rgba(26,14,10,.7);padding-left:20px;position:relative;}
+.modal-bullets li{
+  font-size:13px;line-height:1.7;
+  color:rgba(26,14,10,.7);
+  padding-left:20px;position:relative;
+  contain:layout;
+}
 .modal-bullets li::before{content:'▶';position:absolute;left:0;font-size:10px;color:var(--red);top:2px;}
 .modal-tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px;}
 .modal-tag{font-family:'Bangers',cursive;font-size:14px;letter-spacing:1px;padding:5px 14px;border:2px solid var(--outline);background:var(--yellow);box-shadow:2px 2px 0 var(--outline);}
@@ -941,12 +964,18 @@ body::before{background-image:radial-gradient(circle,rgba(0,0,0,0.10) 1px,transp
   min-width: 0;
   position: relative;
   overflow: hidden;
+  /* cheap shadow on the clip container instead of filter on inner */
+  box-shadow: -12px 8px 40px rgba(0,0,0,.9), 12px 8px 40px rgba(0,0,0,.9);
 }
 
 /* --- Individual spread (hidden by default) ---------- */
 .comic-spread {
   display: none;
   width: 100%;
+  content-visibility: hidden; /* browser skips off-screen spread entirely */
+}
+.comic-spread.active {
+  content-visibility: visible;
 }
 .comic-spread.active {
   display: block;
@@ -961,10 +990,11 @@ body::before{background-image:radial-gradient(circle,rgba(0,0,0,0.10) 1px,transp
   display: grid;
   grid-template-columns: 1fr 1fr;
   /* dramatic book-open shadow */
-  filter:
-    drop-shadow(-14px 10px 30px rgba(0,0,0,.95))
-    drop-shadow(14px 10px 30px rgba(0,0,0,.95));
+  /* box-shadow instead of filter:drop-shadow — much cheaper */
   position: relative;
+  /* GPU layer for the whole spread — avoids repaint on scroll */
+  will-change: transform;
+  transform: translateZ(0);
 }
 
 /* center gutter — simulates the spine */
@@ -995,6 +1025,9 @@ body::before{background-image:radial-gradient(circle,rgba(0,0,0,0.10) 1px,transp
   min-height: 600px;
   border-top: 4px solid #111;
   border-bottom: 4px solid #111;
+  /* isolate paint — changes inside don't cause parent repaints */
+  contain: layout style;
+  transform: translateZ(0);
 }
 .cbook-page-l {
   border-left: 4px solid #111;
@@ -1095,8 +1128,9 @@ body::before{background-image:radial-gradient(circle,rgba(0,0,0,0.10) 1px,transp
   cursor: pointer;
   display: flex;
   flex-direction: column;
-  /* subtle paper bg */
   background: #ede4c8;
+  /* prevent layout thrash from hover/burst effects */
+  contain: layout;
 }
 .cbpanel-tall { grid-row: 1 / 3; }
 .cbpanel-full { flex: 1; margin: 4px 6px; }
@@ -1110,27 +1144,25 @@ body::before{background-image:radial-gradient(circle,rgba(0,0,0,0.10) 1px,transp
 }
 .cbpanel .p-speedlines::before {
   content: '';
-  position: absolute;
-  /* radiate from a point off-panel to the right for drama */
-  top: 50%; left: 50%;
-  width: 200%;
-  height: 200%;
-  transform: translate(-50%, -50%);
-  background: repeating-conic-gradient(
-    from 0deg at 130% 50%,
-    transparent 0deg,
-    transparent 4.5deg,
-    rgba(200,170,80,.06) 4.5deg,
-    rgba(200,170,80,.06) 5deg
+  position: absolute; inset: 0;
+  /* static diagonal lines — GPU friendly, no conic repaint */
+  background-image: repeating-linear-gradient(
+    -48deg,
+    transparent 0px,
+    transparent 8px,
+    rgba(180,150,60,.055) 8px,
+    rgba(180,150,60,.055) 9px
   );
+  background-attachment: local;
 }
 
 /* ── Halftone dots on each panel ── */
 .cbpanel::before {
   content: '';
   position: absolute; inset: 0;
-  background-image: radial-gradient(circle, rgba(0,0,0,.045) 1px, transparent 1px);
-  background-size: 5px 5px;
+  /* SVG dot pattern — single paint, browser-cached, no per-frame cost */
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='6' height='6'%3E%3Ccircle cx='1' cy='1' r='0.8' fill='rgba(0,0,0,0.045)'/%3E%3C/svg%3E");
+  background-size: 6px 6px;
   pointer-events: none;
   z-index: 0;
 }
@@ -2767,8 +2799,10 @@ function _initComic() {
 
   function closeModal() {
     var bg = document.getElementById('modalBg');
-    if (bg) bg.classList.remove('open');
-    document.body.style.overflow = '';
+    if (!bg) return;
+    bg.classList.remove('open');
+    /* restore scroll after CSS opacity transition completes (200ms) */
+    setTimeout(function(){ document.body.style.overflow = ''; }, 210);
   }
 
   /* ── panel clicks — event delegation on the spread wrap ── */
