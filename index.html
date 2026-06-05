@@ -7,7 +7,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Permanent+Marker&family=Special+Elite&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet"/>
 <style>
 /* ════════════════════════════════════════
-   COMIC BOOK THEME — BASE
+   COMIC BOOK THEME, BASE
 ════════════════════════════════════════ */
 :root{
   --ink:#0a0608;
@@ -73,6 +73,10 @@ nav a:hover::after{transform:scaleX(1);}
   overflow:hidden;
   display:flex;
 }
+/* projects must never clip its nav buttons */
+#projects, #projects .comic-book-outer, #projects .comic-book-row {
+  overflow: visible !important;
+}
 
 /* ════════════════════════════════════════
    HERO
@@ -97,7 +101,7 @@ nav a:hover::after{transform:scaleX(1);}
   min-width:0;
   z-index:1;
 }
-/* diagonal speed lines — behind everything */
+/* diagonal speed lines, behind everything */
 .hero-l::after{
   content:'';position:absolute;inset:0;
   background:repeating-linear-gradient(135deg,transparent,transparent 24px,rgba(245,197,24,.03) 24px,rgba(245,197,24,.03) 25px);
@@ -132,7 +136,7 @@ nav a:hover::after{transform:scaleX(1);}
 
 @keyframes slideUp{from{opacity:0;transform:translateY(16px);}to{opacity:1;transform:none;}}
 
-/* hero right — strictly contained */
+/* hero right, strictly contained */
 .hero-r{
   background:#08080f;
   display:flex;align-items:center;justify-content:center;
@@ -148,7 +152,7 @@ nav a:hover::after{transform:scaleX(1);}
 @keyframes heroIn{from{opacity:0;}to{opacity:1;}}
 @keyframes float{0%,100%{transform:translateY(0) rotate(-1.5deg);}50%{transform:translateY(-20px) rotate(1.5deg);}}
 
-/* rain canvas — strictly inside hero-r only */
+/* rain canvas, strictly inside hero-r only */
 canvas.rain{
   position:absolute;
   top:0;left:0;
@@ -156,12 +160,12 @@ canvas.rain{
   height:100% !important;
   pointer-events:none;
   z-index:1;
-  opacity:.18;
+  opacity:.72;
   display:block;
 }
 
 /* ════════════════════════════════════════
-   ABOUT — COMIC PANELS
+   ABOUT, COMIC PANELS
 ════════════════════════════════════════ */
 #about{
   background:var(--panel);
@@ -190,7 +194,7 @@ canvas.rain{
 .quote-box::before{content:'!';position:absolute;top:-14px;right:16px;font-family:'Bangers',cursive;font-size:24px;color:var(--outline);}
 .quote-box p{font-family:'Permanent Marker',cursive;font-size:13.5px;line-height:1.6;color:var(--outline);}
 
-/* right side — exp + stats */
+/* right side, exp + stats */
 .about-r{
   display:grid;grid-template-rows:1fr auto;
   background:var(--panel2);
@@ -219,18 +223,21 @@ canvas.rain{
 .sstat-lbl{font-family:'Space Mono',monospace;font-size:9px;letter-spacing:2px;color:rgba(240,232,208,.4);margin-top:4px;}
 
 /* ════════════════════════════════════════
-   SKILLS — COMIC PANEL GRID
+   SKILLS, COMIC PANEL GRID
 ════════════════════════════════════════ */
 #skills{
   background:var(--panel);
   flex-direction:column;
   border-bottom:var(--thick);
   padding:0;
+  min-height:100vh;
+  display:flex;
 }
 .skills-top{
   display:grid;grid-template-columns:300px 1fr;
   border-bottom:var(--thick);
-  min-height:55vh;
+  min-height:60vh;
+  flex:1;
 }
 .skills-title-box{
   background:var(--ink);
@@ -245,6 +252,8 @@ canvas.rain{
   display:flex;flex-wrap:wrap;align-content:center;gap:14px;
   background:var(--panel);
   position:relative;
+  overflow:visible;;
+  overflow:visible;
 }
 .skills-cloud::before{
   content:'';position:absolute;inset:0;
@@ -259,7 +268,8 @@ canvas.rain{
   color:var(--outline);
   cursor:none;
   transition:all .2s cubic-bezier(.4,0,.2,1);
-  position:relative;overflow:hidden;
+  position:relative;
+  overflow:visible;
   box-shadow:3px 3px 0 var(--outline);
 }
 .stag::before{content:'';position:absolute;inset:0;background:var(--yellow);transform:scaleY(0);transform-origin:bottom;transition:transform .2s;z-index:0;}
@@ -267,38 +277,74 @@ canvas.rain{
 .stag:hover{transform:translate(-2px,-2px);box-shadow:5px 5px 0 var(--outline);}
 .stag:hover::before{transform:scaleY(1);}
 .stag .tip{
-  display:none;position:absolute;bottom:calc(100% + 8px);left:50%;transform:translateX(-50%);
-  background:var(--ink);border:2px solid var(--yellow);padding:4px 10px;
-  font-family:'Space Mono',monospace;font-size:10px;color:var(--yellow);white-space:nowrap;
-  letter-spacing:1px;z-index:100;pointer-events:none;
-  box-shadow:3px 3px 0 rgba(0,0,0,.4);
+  visibility:hidden;
+  opacity:0;
+  position:absolute;
+  bottom:calc(100% + 10px);
+  left:50%;
+  transform:translateX(-50%) translateY(4px);
+  background:var(--ink);
+  border:2.5px solid var(--yellow);
+  padding:6px 14px;
+  font-family:'Bangers',cursive;
+  font-size:14px;
+  letter-spacing:2px;
+  color:var(--yellow);
+  white-space:nowrap;
+  z-index:9999 !important;
+  pointer-events:none;
+  box-shadow:4px 4px 0 rgba(0,0,0,.6);
+  transition:opacity .15s, transform .15s;
 }
-.stag:hover .tip{display:block;}
+.tip::after{
+  content:'';
+  position:absolute;
+  top:100%;left:50%;
+  transform:translateX(-50%);
+  border:6px solid transparent;
+  border-top-color:var(--yellow);
+}
+.stag:hover .tip{
+  visibility:visible;
+  opacity:1;
+  transform:translateX(-50%) translateY(0);
+}
 
 /* certs strip */
 .certs-strip{
   display:grid;grid-template-columns:repeat(4,1fr);
   border-top:var(--thick);
+  flex:1;
 }
 .cert{
-  padding:20px 24px;border-right:3px solid var(--outline);
+  padding:28px 28px 24px;border-right:3px solid var(--outline);
   background:var(--ink);
-  transition:background .2s;
+  transition:background .25s,transform .2s;
+  display:flex;flex-direction:column;gap:10px;
+  position:relative;overflow:hidden;
 }
+.cert::before{
+  content:'';position:absolute;bottom:0;left:0;right:0;height:3px;
+  background:var(--yellow);transform:scaleX(0);transform-origin:left;
+  transition:transform .3s;
+}
+.cert:hover::before{transform:scaleX(1);}
 .cert:last-child{border-right:none;}
 .cert:hover{background:#111;}
-.cert-name{font-family:'Bangers',cursive;font-size:15px;letter-spacing:2px;color:var(--yellow);margin-bottom:4px;}
-.cert-org{font-family:'Space Mono',monospace;font-size:10px;color:rgba(240,232,208,.35);letter-spacing:1px;}
+.cert-icon{font-size:28px;margin-bottom:4px;}
+.cert-name{font-family:'Bangers',cursive;font-size:17px;letter-spacing:2px;color:var(--yellow);line-height:1.2;}
+.cert-org{font-family:'Space Mono',monospace;font-size:11px;color:rgba(240,232,208,.55);letter-spacing:1px;}
+.cert-desc{font-family:'Special Elite',serif;font-size:12.5px;color:rgba(240,232,208,.38);line-height:1.6;margin-top:auto;}
 
 /* ════════════════════════════════════════
-   PROJECTS — COMIC PANELS (ENHANCED)
+   PROJECTS, COMIC PANELS (ENHANCED)
 ════════════════════════════════════════ */
 #projects{
   background:var(--ink);
   flex-direction:column;
   border-bottom:var(--thick);
   position:relative;
-  overflow:hidden;
+  overflow:visible;
 }
 /* diagonal speed-line watermark */
 #projects::before{
@@ -793,13 +839,575 @@ footer{
 
 /* ── CERT LABEL ── */
 .certs-label{
-  font-family:'Bangers',cursive;font-size:11px;letter-spacing:6px;
-  color:rgba(26,14,10,.4);
-  padding:10px 44px 2px;
-  border-top:3px solid var(--outline);
+  font-family:'Bangers',cursive;font-size:16px;letter-spacing:8px;
+  color:rgba(26,14,10,.75);
+  padding:18px 44px 14px;
+  border-top:4px solid var(--outline);
+  border-bottom:2px solid rgba(26,14,10,.12);
   background:var(--panel2);
+  display:flex;align-items:center;gap:12px;
 }
-.certs-label::before{content:'◆  ';font-size:8px;}
+.certs-label::before{content:'◆';font-size:10px;color:var(--red);}
+
+/* ════ READABILITY PATCH ════ */
+.comic-body{font-size:15px;line-height:1.9;color:rgba(26,14,10,.88)!important;}
+.about-text{color:rgba(26,14,10,.88)!important;}
+.exp-detail{font-size:13px!important;color:rgba(26,14,10,.82)!important;line-height:1.8!important;}
+.exp-role{font-size:21px!important;letter-spacing:2px;}
+.exp-co{font-size:11.5px!important;color:#8b1a14!important;font-weight:700;}
+.p-desc{font-size:13px!important;line-height:1.82!important;color:rgba(240,232,208,.75)!important;}
+.hero-desc{font-size:14.5px!important;color:rgba(240,232,208,.78)!important;line-height:1.9!important;}
+.modal-desc{font-size:14.5px!important;color:rgba(26,14,10,.85)!important;}
+.modal-bullets li{font-size:13.5px!important;color:rgba(26,14,10,.82)!important;}
+.quote-box p{font-size:14px!important;color:rgba(26,14,10,.95)!important;}
+.skills-title-box .comic-body{color:rgba(240,232,208,.78)!important;font-size:13.5px!important;}
+.p-name{font-size:22px!important;color:#fff!important;}
+.cert-name{font-size:16px!important;}
+.cert-org{font-size:11px!important;color:rgba(240,232,208,.55)!important;}
+.sstat-lbl{font-size:10px!important;color:rgba(240,232,208,.6)!important;}
+/* halftone slightly lighter so text not washed */
+body::before{background-image:radial-gradient(circle,rgba(0,0,0,0.10) 1px,transparent 1px)!important;}
+
+/* ════════════════════════════════════════
+   COMIC BOOK — FULL REWRITE
+════════════════════════════════════════ */
+
+/* --- Outer container -------------------------------- */
+.comic-book-outer {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 12px 0 28px;
+  background: #0c0800;
+  gap: 14px;
+  position: relative;
+  overflow: visible;
+}
+
+/* --- Row: [◄ btn] [spread] [► btn] ----------------- */
+.comic-book-row {
+  display: flex;
+  align-items: stretch;
+  justify-content: center;
+  width: 100%;
+  max-width: 1320px;
+  gap: 0;
+  padding: 0 8px;
+  box-sizing: border-box;
+  overflow: visible;
+  position: relative;
+  z-index: 10;
+}
+
+/* --- Nav buttons ------------------------------------ */
+.comic-nav-btn {
+  flex: 0 0 52px;
+  min-width: 52px;
+  background: #1a1000;
+  border: 3px solid rgba(245,197,24,.35);
+  color: #F5C518;
+  cursor: pointer;
+  font-family: 'Bangers', cursive;
+  font-size: 38px;
+  line-height: 1;
+  letter-spacing: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background .15s, color .15s, border-color .15s;
+  box-shadow: 3px 3px 0 rgba(0,0,0,.6);
+  position: relative;
+  z-index: 10;
+  user-select: none;
+  pointer-events: auto !important;
+  cursor: pointer !important;
+}
+.comic-nav-btn:hover:not(:disabled) {
+  background: #F5C518;
+  color: #0a0608;
+  border-color: #F5C518;
+}
+.comic-nav-btn:disabled {
+  opacity: .18;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+/* --- Spread viewport -------------------------------- */
+.comic-spread-wrap {
+  flex: 1;
+  min-width: 0;
+  position: relative;
+  overflow: hidden;
+}
+
+/* --- Individual spread (hidden by default) ---------- */
+.comic-spread {
+  display: none;
+  width: 100%;
+}
+.comic-spread.active {
+  display: block;
+}
+.comic-spread.anim-r { animation: csFlipR .38s ease-out; }
+.comic-spread.anim-l { animation: csFlipL .38s ease-out; }
+@keyframes csFlipR { from { opacity: 0; transform: translateX(32px); } to { opacity: 1; transform: none; } }
+@keyframes csFlipL { from { opacity: 0; transform: translateX(-32px); } to { opacity: 1; transform: none; } }
+
+/* --- The open-book spread: two pages side by side --- */
+.comic-spread-inner {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  /* dramatic book-open shadow */
+  filter:
+    drop-shadow(-14px 10px 30px rgba(0,0,0,.95))
+    drop-shadow(14px 10px 30px rgba(0,0,0,.95));
+  position: relative;
+}
+
+/* center gutter — simulates the spine */
+.comic-spread-inner::after {
+  content: '';
+  position: absolute;
+  top: 0; bottom: 0;
+  left: calc(50% - 3px);
+  width: 6px;
+  background: linear-gradient(to right,
+    rgba(0,0,0,.7) 0%,
+    rgba(0,0,0,.9) 45%,
+    rgba(0,0,0,.9) 55%,
+    rgba(0,0,0,.7) 100%);
+  z-index: 20;
+  pointer-events: none;
+}
+
+/* ====================================================
+   COMIC PAGE
+   ==================================================== */
+.cbook-page {
+  background: #f2e8cc;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  overflow: hidden;
+  min-height: 600px;
+  border-top: 4px solid #111;
+  border-bottom: 4px solid #111;
+}
+.cbook-page-l {
+  border-left: 4px solid #111;
+  border-right: 2px solid #222;
+  background: linear-gradient(to right, #e8dcba, #f2e8cc 15%);
+}
+.cbook-page-r {
+  border-right: 4px solid #111;
+  border-left: 2px solid #222;
+  background: linear-gradient(to left, #e8dcba, #f2e8cc 15%);
+}
+
+/* aged paper halftone */
+.cbook-dots {
+  position: absolute; inset: 0;
+  background-image:
+    radial-gradient(circle, rgba(160,120,40,.09) 1px, transparent 1px);
+  background-size: 5px 5px;
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* page spine shadow on left page's right edge */
+.cbook-spine {
+  position: absolute; top: 0; right: 0; bottom: 0;
+  width: 28px;
+  background: linear-gradient(to right,
+    rgba(0,0,0,.35), rgba(0,0,0,.08), transparent);
+  z-index: 15;
+  pointer-events: none;
+}
+
+/* page vignette (yellowed corners) */
+.cbook-page::before {
+  content: '';
+  position: absolute; inset: 0;
+  background:
+    radial-gradient(ellipse at 0% 0%,   rgba(140,100,20,.12) 0%, transparent 50%),
+    radial-gradient(ellipse at 100% 0%,  rgba(140,100,20,.12) 0%, transparent 50%),
+    radial-gradient(ellipse at 0% 100%, rgba(140,100,20,.12) 0%, transparent 50%),
+    radial-gradient(ellipse at 100% 100%,rgba(140,100,20,.12) 0%, transparent 50%);
+  pointer-events: none;
+  z-index: 2;
+}
+
+/* ── Page header banner ─────────────────────────── */
+.cbook-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 5px 14px 5px 16px;
+  background: #0a0608;
+  border-bottom: 3px solid #111;
+  position: relative;
+  z-index: 5;
+  flex-shrink: 0;
+}
+.cbook-issue {
+  font-family: 'Bangers', cursive;
+  font-size: 12px;
+  letter-spacing: 5px;
+  color: #F5C518;
+  text-shadow: 1px 1px 0 rgba(0,0,0,.5);
+}
+.cbook-chapter {
+  font-family: 'Space Mono', monospace;
+  font-size: 8px;
+  letter-spacing: 3px;
+  color: rgba(240,232,208,.55);
+  text-transform: uppercase;
+}
+
+/* ── Panel grid layouts ─────────────────────────── */
+.cbook-panels-2col {
+  display: grid;
+  grid-template-columns: 58% 42%;
+  grid-template-rows: 1fr 1fr;
+  flex: 1;
+  position: relative;
+  z-index: 3;
+}
+.cbook-panels-full {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  z-index: 3;
+}
+
+/* ====================================================
+   INDIVIDUAL COMIC PANEL
+   ==================================================== */
+.cbpanel {
+  border: 3px solid #111;
+  margin: 3px;
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  /* subtle paper bg */
+  background: #ede4c8;
+}
+.cbpanel-tall { grid-row: 1 / 3; }
+.cbpanel-full { flex: 1; margin: 4px 6px; }
+
+/* ── Speed-lines background (the defining comic look) */
+.cbpanel .p-speedlines {
+  position: absolute; inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  overflow: hidden;
+}
+.cbpanel .p-speedlines::before {
+  content: '';
+  position: absolute;
+  /* radiate from a point off-panel to the right for drama */
+  top: 50%; left: 50%;
+  width: 200%;
+  height: 200%;
+  transform: translate(-50%, -50%);
+  background: repeating-conic-gradient(
+    from 0deg at 130% 50%,
+    transparent 0deg,
+    transparent 4.5deg,
+    rgba(200,170,80,.06) 4.5deg,
+    rgba(200,170,80,.06) 5deg
+  );
+}
+
+/* ── Halftone dots on each panel ── */
+.cbpanel::before {
+  content: '';
+  position: absolute; inset: 0;
+  background-image: radial-gradient(circle, rgba(0,0,0,.045) 1px, transparent 1px);
+  background-size: 5px 5px;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ── Panel inner content ── */
+.cbpanel-inner {
+  padding: 10px 12px 8px 12px;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  position: relative;
+  z-index: 4;
+}
+
+.cbp-icon {
+  font-size: 20px;
+  margin-bottom: 4px;
+  line-height: 1;
+  display: block;
+}
+.cbp-num {
+  font-family: 'Space Mono', monospace;
+  font-size: 8px;
+  color: rgba(26,14,10,.35);
+  letter-spacing: 3px;
+  margin-bottom: 2px;
+}
+.cbp-name {
+  font-family: 'Bangers', cursive;
+  font-size: 17px;
+  letter-spacing: 2px;
+  line-height: 1.05;
+  margin-bottom: 6px;
+  /* comic outlined text */
+  color: #0a0608;
+  text-shadow: 1px 1px 0 rgba(0,0,0,.15);
+}
+.cbp-desc {
+  font-family: 'Special Elite', serif;
+  font-size: 11px;
+  line-height: 1.7;
+  color: rgba(26,14,10,.85);
+  flex: 1;
+}
+.cbp-tags {
+  margin-top: 6px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 3px;
+}
+.cbtag {
+  font-family: 'Space Mono', monospace;
+  font-size: 7.5px;
+  padding: 2px 5px;
+  border: 1.5px solid rgba(26,14,10,.32);
+  color: rgba(26,14,10,.62);
+  background: rgba(0,0,0,.04);
+  letter-spacing: .3px;
+}
+.cbp-metrics {
+  margin-top: 5px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 3px;
+}
+.cbmetric {
+  font-family: 'Bangers', cursive;
+  font-size: 9.5px;
+  letter-spacing: 1px;
+  padding: 2px 6px;
+  background: #0a0608;
+  color: #F5C518;
+  border: 1.5px solid #F5C518;
+}
+
+/* ── Click hint ── */
+.cbp-hint {
+  margin-top: 7px;
+  font-family: 'Bangers', cursive;
+  font-size: 9px;
+  letter-spacing: 3px;
+  color: rgba(26,14,10,.28);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.cbp-hint::before {
+  content: '';
+  width: 10px;
+  height: 1.5px;
+  background: currentColor;
+  flex-shrink: 0;
+}
+.cbpanel:hover .cbp-hint { color: #c0241a; }
+
+/* ── Corner page fold ── */
+.cbp-fold {
+  position: absolute;
+  bottom: 0; right: 0;
+  width: 0; height: 0;
+  border-style: solid;
+  border-width: 0 0 20px 20px;
+  border-color: transparent transparent rgba(26,14,10,.18) transparent;
+  transition: border-width .18s;
+  z-index: 6;
+}
+.cbpanel:hover .cbp-fold {
+  border-width: 0 0 30px 30px;
+  border-color: transparent transparent rgba(26,14,10,.3) transparent;
+}
+
+/* ── Hover tint ── */
+.cbpanel::after {
+  content: '';
+  position: absolute; inset: 0;
+  background: rgba(245,197,24,0);
+  transition: background .2s;
+  pointer-events: none;
+  z-index: 3;
+}
+.cbpanel:hover::after {
+  background: rgba(245,197,24,.04);
+}
+
+/* ====================================================
+   POW BURST — click-only, NOT hover
+   ==================================================== */
+.cbp-burst {
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%,-50%) scale(0) rotate(-14deg);
+  font-family: 'Bangers', cursive;
+  font-size: 60px;
+  letter-spacing: 2px;
+  white-space: nowrap;
+  pointer-events: none;
+  z-index: 30;
+  opacity: 0;
+  /* Classic comic lettering: white fill, red outline */
+  color: #fff;
+  -webkit-text-stroke: 3.5px #c0241a;
+  paint-order: stroke fill;
+  text-shadow:
+    5px 5px 0 rgba(0,0,0,.4),
+    0 0 25px rgba(192,36,26,.6);
+}
+/* yellow starburst behind the text */
+.cbp-burst::before {
+  content: '';
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%,-50%);
+  width: 110%;
+  height: 110%;
+  background: radial-gradient(ellipse at center,
+    rgba(245,197,24,.95) 0%,
+    rgba(245,197,24,.7) 35%,
+    rgba(245,197,24,.15) 65%,
+    transparent 75%);
+  z-index: -1;
+  border-radius: 50%;
+}
+
+.cbpanel.burst-active .cbp-burst {
+  animation: comicBurst .65s cubic-bezier(.34,1.56,.64,1) forwards;
+}
+@keyframes comicBurst {
+  0%   { transform: translate(-50%,-50%) scale(0)    rotate(-14deg); opacity: 0; }
+  30%  { opacity: 1; }
+  45%  { transform: translate(-50%,-50%) scale(1.18) rotate( 5deg);  opacity: 1; }
+  70%  { transform: translate(-50%,-50%) scale(.95)  rotate(-2deg);  opacity: 1; }
+  88%  { opacity: 1; }
+  100% { transform: translate(-50%,-50%) scale(1)    rotate( 0deg);  opacity: 0; }
+}
+
+/* ====================================================
+   CAPTION + FOOTER
+   ==================================================== */
+.cbook-caption {
+  padding: 7px 14px;
+  background: #0a0608;
+  border-top: 2.5px solid #111;
+  font-family: 'Permanent Marker', cursive;
+  font-size: 10.5px;
+  color: rgba(245,197,24,.78);
+  letter-spacing: .5px;
+  font-style: italic;
+  position: relative; z-index: 5;
+  flex-shrink: 0;
+}
+.cbook-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 4px 14px;
+  background: #e2d9b8;
+  border-top: 2px solid rgba(26,14,10,.14);
+  position: relative; z-index: 5;
+  flex-shrink: 0;
+}
+.cbook-footer span {
+  font-family: 'Space Mono', monospace;
+  font-size: 7.5px;
+  color: rgba(26,14,10,.3);
+  letter-spacing: 1px;
+}
+
+/* feature pages */
+.cbook-page-feature {
+  background: linear-gradient(135deg, #0a0608 0%, #160a00 100%) !important;
+}
+.cbook-page-feature .cbook-dots {
+  background-image: radial-gradient(circle, rgba(245,197,24,.04) 1px, transparent 1px) !important;
+}
+
+.cbook-pg {
+  font-family: 'Bangers', cursive;
+  font-size: 13px;
+  letter-spacing: 3px;
+  color: rgba(26,14,10,.22);
+}
+
+/* ====================================================
+   SPREAD DOTS + COUNTER
+   ==================================================== */
+.comic-spread-dots {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  position: relative; z-index: 10;
+}
+.csd {
+  width: 12px; height: 12px;
+  border-radius: 50%;
+  border: 2px solid rgba(245,197,24,.3);
+  background: transparent;
+  cursor: pointer;
+  transition: all .22s;
+}
+.csd.on {
+  background: #F5C518;
+  border-color: #F5C518;
+  box-shadow: 0 0 8px #F5C518;
+}
+
+.proj-count-big {
+  font-family: 'Bangers', cursive;
+  font-size: 20px;
+  color: rgba(245,197,24,.65);
+  letter-spacing: 4px;
+  line-height: 1;
+}
+
+/* ====================================================
+   MOBILE
+   ==================================================== */
+@media (max-width: 768px) {
+  .comic-book-row { gap: 0; padding: 0 6px; }
+  .comic-nav-btn  { flex: 0 0 38px; min-width: 38px; font-size: 28px; }
+  .comic-spread-inner { grid-template-columns: 1fr; }
+  .cbook-page-r   { display: none; }
+  .cbook-page     { min-height: 380px; }
+  .cbpanel-tall   { grid-row: auto; }
+  .cbook-panels-2col { grid-template-columns: 1fr; grid-template-rows: auto auto; }
+  .cbp-name       { font-size: 14px; }
+  .cbp-desc       { font-size: 10.5px; }
+  .cbp-burst      { font-size: 42px; }
+}
+
+/* Ensure nav buttons are always clickable even with body cursor:none */
+.comic-nav-btn, #comicPrev, #comicNext {
+  pointer-events: auto !important;
+  cursor: pointer !important;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
 </style>
 </head>
 <body>
@@ -860,7 +1468,7 @@ footer{
     <div class="bat-glow"></div>
     <div class="hero-tag">AI ENGINEER & FOUNDER</div>
     <h1 class="hero-name">DARA<em>BODLA</em></h1>
-    <p class="hero-desc">3rd year AI student at GIKI. Co-founder and CEO of CPC. Building full stack AI systems from training to production, one commit at a time.</p>
+    <p class="hero-desc">3rd year AI student at GIKI. Co founder and CEO of CPC. Building full stack AI systems from training to production, one commit at a time.</p>
     <div class="hero-btns">
       <a href="#projects" class="btn btn-fill"><span>VIEW WORK</span></a>
       <a href="#contact"  class="btn btn-ghost"><span>CONTACT</span></a>
@@ -896,19 +1504,19 @@ footer{
     <div class="exp-panel">
       <div class="panel-label rv-r">EXPERIENCE</div>
       <div class="exp-item rv-r" style="transition-delay:.1s">
-        <div class="exp-co">CORBIS SOFT (PVT.) LTD. · JUN JUL 2025</div>
+        <div class="exp-co">CORBIS SOFT (PVT.) LTD. · JUN–JUL 2025</div>
         <div class="exp-role">AI INTERN</div>
-        <p class="exp-detail">Shipped 3 end-to-end AI prototypes in 10 weeks: a YOLOv8 floor-plan dimension reader (mAP 0.812), a Deep Q-Network chess agent (win rate 0→0.437), and a role-based ERP system with PostgreSQL.</p>
+        <p class="exp-detail">Shipped 3 end to end AI prototypes in 10 weeks: a YOLOv8 floor-plan dimension reader (mAP 0.812), a Deep Q-Network chess agent (win rate 0→0.437), and a role based ERP system with PostgreSQL.</p>
       </div>
       <div class="exp-item rv-r" style="transition-delay:.18s">
         <div class="exp-co">CPC · 2025 PRESENT</div>
         <div class="exp-role">CO-FOUNDER & CEO</div>
-        <p class="exp-detail">Built WhatsApp automation platform serving 3+ business verticals. Sub-2s latency, live Meta catalogue integration, custom onboarding portal, billing system.</p>
+        <p class="exp-detail">Built WhatsApp automation platform serving 3+ business verticals. Sub 2s latency, live Meta catalogue integration, custom onboarding portal, billing system.</p>
       </div>
       <div class="exp-item rv-r" style="transition-delay:.26s">
         <div class="exp-co">HACK@GIKI · 2026 PRESENT</div>
         <div class="exp-role">EC MEMBER</div>
-        <p class="exp-detail">Organised Hack-Nation × MIT hackathon. Built sponsorship decks, interactive HTML presentations, and "The AI Scientist" project for the World Bank Youth Summit track.</p>
+        <p class="exp-detail">Organised Hack Nation × MIT hackathon. Built sponsorship decks, interactive HTML presentations, and "The AI Scientist" project for the World Bank Youth Summit track.</p>
       </div>
     </div>
     <div class="stats-strip">
@@ -957,167 +1565,662 @@ footer{
     <div class="certs-label rv">CERTIFICATIONS</div>
     <div class="certs-strip">
       <div class="cert rv" style="transition-delay:.05s">
-        <div class="cert-name">GEN AI WITH LLMs</div>
+        <div class="cert-icon">🤖</div>
+        <div class="cert-name">GENERATIVE AI WITH LLMs</div>
         <div class="cert-org">IBM SPECIALIZATION · NOV 2025</div>
+        <div class="cert-desc">RAG pipelines, fine-tuning, LLM inference at scale across 6 courses.</div>
       </div>
       <div class="cert rv" style="transition-delay:.12s">
+        <div class="cert-icon">🔍</div>
         <div class="cert-name">AI ESSENTIALS</div>
         <div class="cert-org">GOOGLE · JUL 2024</div>
+        <div class="cert-desc">Practical machine learning, neural networks, and AI product development.</div>
       </div>
       <div class="cert rv" style="transition-delay:.19s">
-        <div class="cert-name">UX DESIGN</div>
-        <div class="cert-org">GOOGLE PROFESSIONAL · AUG 2024</div>
+        <div class="cert-icon">🎨</div>
+        <div class="cert-name">UX DESIGN PROFESSIONAL</div>
+        <div class="cert-org">GOOGLE · AUG 2024</div>
+        <div class="cert-desc">User research, wireframing, Figma prototyping, and usability testing.</div>
       </div>
       <div class="cert rv" style="transition-delay:.26s">
-        <div class="cert-name">QUANT MODELLING</div>
+        <div class="cert-icon">📊</div>
+        <div class="cert-name">QUANTITATIVE MODELLING</div>
         <div class="cert-org">WHARTON · JUL 2024</div>
+        <div class="cert-desc">Financial modelling, regression analysis, and decision-making under uncertainty.</div>
       </div>
     </div>
   </div>
   <span class="pg-num">#03</span>
 </section>
 
-<!-- ═══════════ PROJECTS ═══════════ -->
-<section class="pg" id="projects" style="flex-direction:column;">
+<!-- ═══════════ PROJECTS, COMIC BOOK FLIP ═══════════ -->
+<section class="pg" id="projects" style="flex-direction:column;min-height:100vh;overflow:visible;">
+
   <div class="projects-top">
     <div>
       <div class="panel-label rv" style="color:rgba(245,197,24,.35)">CASE FILES</div>
       <h2 class="comic-title rv" style="transition-delay:.1s">NOTABLE <em>WORK</em></h2>
     </div>
     <div class="proj-header-right rv">
-      <div class="proj-count-big">09</div>
-      <span class="proj-hint">CLICK TO EXPAND</span>
+      <div class="proj-count-big" id="pageCounter">SPREAD 1 OF 3</div>
+      <span class="proj-hint">← → FLIP · CLICK TO EXPAND</span>
     </div>
   </div>
-  <div class="proj-grid" id="projGrid">
 
-    <!-- ROW 1 -->
-    <div class="proj-row-label"><span>COMPUTER VISION + NLP</span></div>
+  <div class="comic-book-outer" id="comicBookOuter">
+    <div class="comic-book-row">
+      <button class="comic-nav-btn" id="comicPrev" disabled>&#8249;</button>
+      <div class="comic-spread-wrap" id="comicSpreadWrap">
 
-    <div class="pcard rv" data-word="POW!" data-pid="0" style="transition-delay:.05s">
-      <div class="p-bar"></div><div class="p-sweep"></div><div class="p-fold"></div>
-      <div class="p-burst">POW!</div>
-      <div class="pbody">
-        <div class="p-icon">👄</div>
-        <div class="p-num">01</div>
-        <div class="p-name">LIP FILLER</div>
-        <p class="p-desc">Silent speech recognition. 3D-CNN + MS-TCN + BiLSTM on 100 class LRW dataset.</p>
-        <div class="p-tags"><span class="ptag">3D-CNN</span><span class="ptag">BiLSTM</span><span class="ptag">PyTorch</span></div>
-        <div class="p-cta">READ MORE</div>
-      </div>
+<!-- ══════════════════════════════════
+     SPREAD 1 — LIP FILLER / MOVIE REV / CORBIS FULL PAGE
+     Left page: 2 projects (tall + small)
+     Right page: CORBIS INTERNSHIP (full dramatic page)
+══════════════════════════════════ -->
+<div class="comic-spread active" data-spread="0">
+<div class="comic-spread-inner">
+
+  <!-- LEFT PAGE -->
+  <div class="cbook-page cbook-page-l">
+    <div class="cbook-spine"></div><div class="cbook-dots"></div>
+    <div class="cbook-header">
+      <span class="cbook-issue">ISSUE #01</span>
+      <span class="cbook-chapter">COMPUTER VISION + MLOps</span>
     </div>
+    <!-- 2-row layout: tall left panel + 2 right panels stacked -->
+    <div style="display:grid;grid-template-columns:55% 45%;grid-template-rows:1fr 1fr;flex:1;">
 
-    <div class="pcard rv" data-word="ZAP!" data-pid="1" style="transition-delay:.10s">
-      <div class="p-bar"></div><div class="p-sweep"></div><div class="p-fold"></div>
-      <div class="p-burst">ZAP!</div>
-      <div class="pbody">
-        <div class="p-icon">🎬</div>
-        <div class="p-num">02</div>
-        <div class="p-name">MOVIE REVENUE PREDICTOR</div>
-        <p class="p-desc">Full MLOps platform. XGBoost ensemble, FastAPI, Prefect, Docker, CI/CD. ROC-AUC 0.80.</p>
-        <div class="p-tags"><span class="ptag">MLOps</span><span class="ptag">XGBoost</span><span class="ptag">FastAPI</span></div>
-        <div class="p-cta">READ MORE</div>
+      <!-- PANEL: LIP FILLER — tall, spans both rows -->
+      <div class="cbpanel" data-pid="0" style="grid-row:1/3;">
+        <div class="p-speedlines"><div></div></div>
+        <div class="cbpanel-inner">
+          <div class="cbp-art">
+            <svg viewBox="0 0 140 80" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:80px;margin-bottom:6px;">
+              <!-- brain waves / audio waveform -->
+              <rect width="140" height="80" fill="#1a0e20" rx="2"/>
+              <!-- waveform lines -->
+              <polyline points="0,40 10,20 20,55 30,15 40,50 50,30 60,45 70,10 80,50 90,25 100,45 110,35 120,55 130,20 140,40"
+                stroke="#c0241a" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+              <polyline points="0,40 10,50 20,30 30,55 40,25 50,48 60,28 70,52 80,22 90,45 100,32 110,50 120,28 130,48 140,40"
+                stroke="#F5C518" stroke-width="1.5" fill="none" stroke-linecap="round" opacity=".6"/>
+              <!-- lip silhouette -->
+              <ellipse cx="70" cy="58" rx="30" ry="10" fill="#c0241a" opacity=".7"/>
+              <ellipse cx="70" cy="53" rx="18" ry="6" fill="#ff6b8a" opacity=".8"/>
+              <!-- label -->
+              <text x="70" y="14" text-anchor="middle" font-family="Bangers,cursive" font-size="9" fill="#F5C518" letter-spacing="2">SILENT SPEECH</text>
+            </svg>
+          </div>
+          <div class="cbp-num">01</div>
+          <div class="cbp-name">LIP FILLER</div>
+          <p class="cbp-desc">Silent speech recognition using 3D-CNN, MS-TCN and BiLSTM on the LRW dataset. 11 modules and 2900 lines of production code trained on T4 GPU with curriculum learning.</p>
+          <div class="cbp-tags"><span class="cbtag">3D-CNN</span><span class="cbtag">BiLSTM</span><span class="cbtag">MS-TCN</span><span class="cbtag">PyTorch</span></div>
+          <div class="cbp-metrics"><span class="cbmetric">100 CLASSES</span><span class="cbmetric">T4 GPU</span></div>
+          <div class="cbp-hint">CLICK TO EXPAND</div>
+        </div>
+        <div class="cbp-fold"></div>
+        <div class="cbp-burst">POW!</div>
       </div>
-    </div>
 
-    <div class="pcard rv" data-word="BOOM!" data-pid="2" style="transition-delay:.15s">
-      <div class="p-bar"></div><div class="p-sweep"></div><div class="p-fold"></div>
-      <div class="p-burst">BOOM!</div>
-      <div class="pbody">
-        <div class="p-icon">🏢</div>
-        <div class="p-num">03</div>
-        <div class="p-name">CORBIS SOFT INTERNSHIP</div>
-        <p class="p-desc">3 AI prototypes in 10 weeks. YOLOv8 floor plans, DQN chess agent, role based ERP.</p>
-        <div class="p-tags"><span class="ptag">YOLOv8</span><span class="ptag">DQN</span><span class="ptag">PostgreSQL</span></div>
-        <div class="p-cta">READ MORE</div>
+      <!-- PANEL: MOVIE REVENUE — top right -->
+      <div class="cbpanel" data-pid="1">
+        <div class="p-speedlines"><div></div></div>
+        <div class="cbpanel-inner">
+          <div class="cbp-art">
+            <svg viewBox="0 0 110 55" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:55px;margin-bottom:5px;">
+              <rect width="110" height="55" fill="#0d1a0d" rx="2"/>
+              <!-- bar chart -->
+              <rect x="8"  y="35" width="12" height="15" fill="#F5C518" opacity=".7"/>
+              <rect x="24" y="25" width="12" height="25" fill="#F5C518" opacity=".85"/>
+              <rect x="40" y="18" width="12" height="32" fill="#F5C518"/>
+              <rect x="56" y="10" width="12" height="40" fill="#c0241a"/>
+              <rect x="72" y="20" width="12" height="30" fill="#F5C518" opacity=".8"/>
+              <rect x="88" y="28" width="12" height="22" fill="#F5C518" opacity=".6"/>
+              <!-- trend line -->
+              <polyline points="14,38 30,28 46,20 62,12 78,22 94,30" stroke="#fff" stroke-width="1.5" fill="none" stroke-dasharray="3 2"/>
+              <text x="55" y="8" text-anchor="middle" font-family="Bangers,cursive" font-size="7" fill="#F5C518" letter-spacing="1">ROC-AUC 0.80</text>
+            </svg>
+          </div>
+          <div class="cbp-num">02</div>
+          <div class="cbp-name">MOVIE REVENUE PREDICTOR</div>
+          <p class="cbp-desc">Full MLOps pipeline. XGBoost ensemble, FastAPI, Prefect, Docker, GitHub Actions CI/CD.</p>
+          <div class="cbp-tags"><span class="cbtag">MLOps</span><span class="cbtag">XGBoost</span></div>
+          <div class="cbp-hint">CLICK TO EXPAND</div>
+        </div>
+        <div class="cbp-fold"></div>
+        <div class="cbp-burst">ZAP!</div>
       </div>
-    </div>
 
-    <!-- ROW 2 -->
-    <div class="proj-row-label"><span>DETECTION + STARTUP + CLOUD</span></div>
-
-    <div class="pcard rv" data-word="WHAM!" data-pid="3" style="transition-delay:.20s">
-      <div class="p-bar"></div><div class="p-sweep"></div><div class="p-fold"></div>
-      <div class="p-burst">WHAM!</div>
-      <div class="pbody">
-        <div class="p-icon">🤟</div>
-        <div class="p-num">04</div>
-        <div class="p-name">ASL SIGN LANGUAGE DETECTOR</div>
-        <p class="p-desc">Faster R-CNN + MobileNetV3 FPN. 87.31% mAP@0.5. Real time webcam inference.</p>
-        <div class="p-tags"><span class="ptag">Faster R-CNN</span><span class="ptag">FastAPI</span><span class="ptag">87.31% mAP</span></div>
-        <div class="p-cta">READ MORE</div>
+      <!-- PANEL: ASL DETECTOR — bottom right -->
+      <div class="cbpanel" data-pid="3">
+        <div class="p-speedlines"><div></div></div>
+        <div class="cbpanel-inner">
+          <div class="cbp-art">
+            <svg viewBox="0 0 110 50" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:50px;margin-bottom:4px;">
+              <rect width="110" height="50" fill="#0a1520" rx="2"/>
+              <!-- hand silhouette -->
+              <path d="M30,45 C30,45 20,42 18,35 C16,28 22,20 28,18 C28,18 26,8 30,6 C34,4 36,10 36,14 C36,14 38,5 42,5 C46,5 46,12 46,16 C46,16 48,8 52,9 C56,10 55,17 54,20 C54,20 56,14 60,15 C64,16 62,24 60,28 L56,38 L50,44 Z"
+                fill="#F5C518" opacity=".8" stroke="#c0241a" stroke-width="1"/>
+              <!-- detection box -->
+              <rect x="12" y="2" width="56" height="46" rx="2" fill="none" stroke="#00ff88" stroke-width="1.5" stroke-dasharray="4 2"/>
+              <!-- label -->
+              <rect x="12" y="2" width="28" height="9" fill="#00ff88" opacity=".9" rx="1"/>
+              <text x="26" y="9" text-anchor="middle" font-family="Space Mono,monospace" font-size="5" fill="#000">ASL: A 87%</text>
+              <!-- right side metrics -->
+              <text x="78" y="18" font-family="Bangers,cursive" font-size="8" fill="#F5C518">87.31%</text>
+              <text x="78" y="28" font-family="Space Mono,monospace" font-size="5" fill="rgba(240,232,208,.5)">mAP@0.5</text>
+              <text x="78" y="40" font-family="Bangers,cursive" font-size="7" fill="#c0241a">97.2%</text>
+              <text x="78" y="48" font-family="Space Mono,monospace" font-size="5" fill="rgba(240,232,208,.5)">DETECT</text>
+            </svg>
+          </div>
+          <div class="cbp-num">04</div>
+          <div class="cbp-name">ASL DETECTOR</div>
+          <p class="cbp-desc">Faster R-CNN MobileNetV3. Real time webcam inference, 87.31% mAP.</p>
+          <div class="cbp-tags"><span class="cbtag">Faster R-CNN</span><span class="cbtag">FastAPI</span></div>
+          <div class="cbp-hint">CLICK TO EXPAND</div>
+        </div>
+        <div class="cbp-fold"></div>
+        <div class="cbp-burst">WHAM!</div>
       </div>
-    </div>
 
-    <div class="pcard rv" data-word="KA-POW!" data-pid="4" style="transition-delay:.25s">
-      <div class="p-bar"></div><div class="p-sweep"></div><div class="p-fold"></div>
-      <div class="p-burst">KA-POW!</div>
-      <div class="pbody">
-        <div class="p-icon">💬</div>
-        <div class="p-num">05</div>
-        <div class="p-name">CPC PLATFORM</div>
-        <p class="p-desc">WhatsApp chatbot SaaS. Meta catalogue, billing, sub-2s latency. 3+ business verticals.</p>
-        <div class="p-tags"><span class="ptag">WhatsApp API</span><span class="ptag">Supabase</span><span class="ptag">Startup</span></div>
-        <div class="p-cta">READ MORE</div>
-      </div>
-    </div>
-
-    <div class="pcard rv" data-word="CRASH!" data-pid="5" style="transition-delay:.30s">
-      <div class="p-bar"></div><div class="p-sweep"></div><div class="p-fold"></div>
-      <div class="p-burst">CRASH!</div>
-      <div class="pbody">
-        <div class="p-icon">☁️</div>
-        <div class="p-num">06</div>
-        <div class="p-name">BAYAN AI</div>
-        <p class="p-desc">Serverless AWS lecture pipeline. Step Functions, Lambda, Transcribe, Polly. English to Urdu.</p>
-        <div class="p-tags"><span class="ptag">AWS</span><span class="ptag">Serverless</span><span class="ptag">NLP</span></div>
-        <div class="p-cta">READ MORE</div>
-      </div>
-    </div>
-
-    <!-- ROW 3 -->
-    <div class="proj-row-label"><span>NETWORKS + HACKATHON + IaC</span></div>
-
-    <div class="pcard rv" data-word="BIFF!" data-pid="6" style="transition-delay:.35s">
-      <div class="p-bar"></div><div class="p-sweep"></div><div class="p-fold"></div>
-      <div class="p-burst">BIFF!</div>
-      <div class="pbody">
-        <div class="p-icon">📡</div>
-        <div class="p-num">07</div>
-        <div class="p-name">NETWORK TRAFFIC PREDICTION</div>
-        <p class="p-desc">LSTM QoS controller on 23 node backbone. 90.6% fewer congestion events vs reactive baseline.</p>
-        <div class="p-tags"><span class="ptag">LSTM</span><span class="ptag">AnyLogic</span><span class="ptag">QoS</span></div>
-        <div class="p-cta">READ MORE</div>
-      </div>
-    </div>
-
-    <div class="pcard rv" data-word="POW!" data-pid="7" style="transition-delay:.40s">
-      <div class="p-bar"></div><div class="p-sweep"></div><div class="p-fold"></div>
-      <div class="p-burst">POW!</div>
-      <div class="pbody">
-        <div class="p-icon">🔬</div>
-        <div class="p-num">08</div>
-        <div class="p-name">THE AI SCIENTIST</div>
-        <p class="p-desc">Hypothesis to experiment pipeline. Semantic Scholar API. Built for World Bank Youth Summit.</p>
-        <div class="p-tags"><span class="ptag">Next.js</span><span class="ptag">LLM</span><span class="ptag">Hackathon</span></div>
-        <div class="p-cta">READ MORE</div>
-      </div>
-    </div>
-
-    <div class="pcard rv" data-word="ZAP!" data-pid="8" style="transition-delay:.45s">
-      <div class="p-bar"></div><div class="p-sweep"></div><div class="p-fold"></div>
-      <div class="p-burst">ZAP!</div>
-      <div class="pbody">
-        <div class="p-icon">🏗️</div>
-        <div class="p-num">09</div>
-        <div class="p-name">UNIEVENT (AWS CLOUD)</div>
-        <p class="p-desc">Flask event app. 473 line CloudFormation template, 20+ AWS resources. 45min to 5min deploy.</p>
-        <div class="p-tags"><span class="ptag">CloudFormation</span><span class="ptag">AWS</span><span class="ptag">IaC</span></div>
-        <div class="p-cta">READ MORE</div>
-      </div>
-    </div>
-
+    </div><!-- /grid -->
+    <div class="cbook-footer"><span>DARA BODLA · AI PORTFOLIO</span><span class="cbook-pg">PG. 01</span></div>
   </div>
+
+  <!-- RIGHT PAGE — CORBIS SOFT INTERNSHIP (full dramatic page) -->
+  <div class="cbook-page cbook-page-r cbook-page-feature">
+    <div class="cbook-dots"></div>
+    <div class="cbook-header" style="background:#c0241a;border-bottom:3px solid #8b1010;">
+      <span class="cbook-issue" style="color:#fff;">CORBIS SOFT · JUN–JUL 2025</span>
+      <span class="cbook-chapter" style="color:rgba(255,255,255,.6);">AI INTERNSHIP</span>
+    </div>
+
+    <!-- Full-page hero art -->
+    <div style="padding:0;flex:0 0 auto;">
+      <svg viewBox="0 0 460 180" xmlns="http://www.w3.org/2000/svg" style="width:100%;display:block;">
+        <rect width="460" height="180" fill="#0a0608"/>
+        <!-- speed lines radiating from centre -->
+        <g opacity=".18">
+          <line x1="230" y1="90" x2="0"   y2="0"   stroke="#F5C518" stroke-width="1"/>
+          <line x1="230" y1="90" x2="115" y2="0"   stroke="#F5C518" stroke-width="1"/>
+          <line x1="230" y1="90" x2="230" y2="0"   stroke="#F5C518" stroke-width="1"/>
+          <line x1="230" y1="90" x2="345" y2="0"   stroke="#F5C518" stroke-width="1"/>
+          <line x1="230" y1="90" x2="460" y2="0"   stroke="#F5C518" stroke-width="1"/>
+          <line x1="230" y1="90" x2="460" y2="90"  stroke="#F5C518" stroke-width="1"/>
+          <line x1="230" y1="90" x2="460" y2="180" stroke="#F5C518" stroke-width="1"/>
+          <line x1="230" y1="90" x2="345" y2="180" stroke="#F5C518" stroke-width="1"/>
+          <line x1="230" y1="90" x2="230" y2="180" stroke="#F5C518" stroke-width="1"/>
+          <line x1="230" y1="90" x2="115" y2="180" stroke="#F5C518" stroke-width="1"/>
+          <line x1="230" y1="90" x2="0"   y2="180" stroke="#F5C518" stroke-width="1"/>
+          <line x1="230" y1="90" x2="0"   y2="90"  stroke="#F5C518" stroke-width="1"/>
+        </g>
+        <!-- 3 prototype icons -->
+        <!-- Prototype 1: YOLOv8 floor plan -->
+        <rect x="30" y="20" width="120" height="145" rx="3" fill="none" stroke="#F5C518" stroke-width="2"/>
+        <rect x="30" y="20" width="120" height="22" fill="#F5C518" rx="2"/>
+        <text x="90" y="35" text-anchor="middle" font-family="Bangers,cursive" font-size="10" fill="#0a0608" letter-spacing="1">FLOOR PLAN AI</text>
+        <rect x="40" y="52" width="100" height="70" fill="none" stroke="rgba(245,197,24,.3)" stroke-width="1"/>
+        <rect x="40" y="52" width="45" height="35" fill="rgba(245,197,24,.08)" stroke="rgba(245,197,24,.4)" stroke-width="1"/>
+        <rect x="90" y="52" width="50" height="35" fill="rgba(192,36,26,.08)" stroke="rgba(192,36,26,.4)" stroke-width="1"/>
+        <rect x="40" y="90" width="100" height="32" fill="rgba(245,197,24,.05)" stroke="rgba(245,197,24,.3)" stroke-width="1"/>
+        <text x="90" y="134" text-anchor="middle" font-family="Space Mono,monospace" font-size="7" fill="rgba(245,197,24,.7)">mAP@0.5 = 0.812</text>
+        <rect x="30" y="152" width="120" height="9" fill="rgba(245,197,24,.1)"/>
+        <text x="90" y="159" text-anchor="middle" font-family="Bangers,cursive" font-size="7" fill="rgba(245,197,24,.5)" letter-spacing="1">YOLOv8 + OCR</text>
+        <!-- Prototype 2: Chess DQN -->
+        <rect x="170" y="20" width="120" height="145" rx="3" fill="none" stroke="#c0241a" stroke-width="2"/>
+        <rect x="170" y="20" width="120" height="22" fill="#c0241a" rx="2"/>
+        <text x="230" y="35" text-anchor="middle" font-family="Bangers,cursive" font-size="10" fill="#fff" letter-spacing="1">CHESS DQN AGENT</text>
+        <!-- chess board simplified -->
+        <g transform="translate(182,48)">
+          <rect width="96" height="96" fill="none" stroke="rgba(192,36,26,.4)" stroke-width="1"/>
+          <rect x="0"  y="0"  width="12" height="12" fill="rgba(255,255,255,.12)"/>
+          <rect x="12" y="0"  width="12" height="12" fill="rgba(0,0,0,.2)"/>
+          <rect x="24" y="0"  width="12" height="12" fill="rgba(255,255,255,.12)"/>
+          <rect x="36" y="0"  width="12" height="12" fill="rgba(0,0,0,.2)"/>
+          <rect x="48" y="0"  width="12" height="12" fill="rgba(255,255,255,.12)"/>
+          <rect x="60" y="0"  width="12" height="12" fill="rgba(0,0,0,.2)"/>
+          <rect x="72" y="0"  width="12" height="12" fill="rgba(255,255,255,.12)"/>
+          <rect x="84" y="0"  width="12" height="12" fill="rgba(0,0,0,.2)"/>
+          <rect x="0"  y="12" width="12" height="12" fill="rgba(0,0,0,.2)"/>
+          <rect x="12" y="12" width="12" height="12" fill="rgba(255,255,255,.12)"/>
+          <rect x="24" y="12" width="12" height="12" fill="rgba(0,0,0,.2)"/>
+          <rect x="36" y="12" width="12" height="12" fill="rgba(255,255,255,.12)"/>
+          <rect x="48" y="12" width="12" height="12" fill="rgba(0,0,0,.2)"/>
+          <rect x="60" y="12" width="12" height="12" fill="rgba(255,255,255,.12)"/>
+          <rect x="72" y="12" width="12" height="12" fill="rgba(0,0,0,.2)"/>
+          <rect x="84" y="12" width="12" height="12" fill="rgba(255,255,255,.12)"/>
+          <!-- knight piece -->
+          <path d="M44,72 C44,72 46,58 52,52 C58,46 64,48 64,48 L60,56 L68,52 C68,52 65,64 58,70 L44,72Z"
+            fill="#F5C518" stroke="#0a0608" stroke-width="1"/>
+          <!-- highlight square -->
+          <rect x="48" y="48" width="12" height="12" fill="rgba(0,255,100,.3)" stroke="rgba(0,255,100,.7)" stroke-width="1"/>
+        </g>
+        <text x="230" y="156" text-anchor="middle" font-family="Bangers,cursive" font-size="7" fill="rgba(192,36,26,.7)" letter-spacing="1">WIN RATE 0 → 0.437</text>
+        <!-- Prototype 3: ERP -->
+        <rect x="310" y="20" width="120" height="145" rx="3" fill="none" stroke="#4f8ef7" stroke-width="2"/>
+        <rect x="310" y="20" width="120" height="22" fill="#4f8ef7" rx="2"/>
+        <text x="370" y="35" text-anchor="middle" font-family="Bangers,cursive" font-size="10" fill="#fff" letter-spacing="1">ROLE-BASED ERP</text>
+        <!-- hierarchy diagram -->
+        <rect x="340" y="50" width="60" height="18" rx="2" fill="rgba(79,142,247,.3)" stroke="rgba(79,142,247,.6)" stroke-width="1"/>
+        <text x="370" y="62" text-anchor="middle" font-family="Space Mono,monospace" font-size="6" fill="rgba(240,232,208,.8)">ADMIN</text>
+        <line x1="355" y1="68" x2="340" y2="82" stroke="rgba(79,142,247,.5)" stroke-width="1"/>
+        <line x1="385" y1="68" x2="400" y2="82" stroke="rgba(79,142,247,.5)" stroke-width="1"/>
+        <rect x="320" y="82" width="40" height="15" rx="2" fill="rgba(79,142,247,.2)" stroke="rgba(79,142,247,.4)" stroke-width="1"/>
+        <text x="340" y="92" text-anchor="middle" font-family="Space Mono,monospace" font-size="5" fill="rgba(240,232,208,.7)">MANAGER</text>
+        <rect x="380" y="82" width="40" height="15" rx="2" fill="rgba(79,142,247,.2)" stroke="rgba(79,142,247,.4)" stroke-width="1"/>
+        <text x="400" y="92" text-anchor="middle" font-family="Space Mono,monospace" font-size="5" fill="rgba(240,232,208,.7)">EMPLOYEE</text>
+        <!-- DB tables -->
+        <rect x="320" y="108" width="100" height="45" fill="rgba(0,0,0,.3)" rx="2"/>
+        <text x="370" y="120" text-anchor="middle" font-family="Space Mono,monospace" font-size="5" fill="rgba(79,142,247,.8)">9 TABLES · 15 ENDPOINTS</text>
+        <rect x="324" y="124" width="92" height="6" fill="rgba(79,142,247,.15)" rx="1"/>
+        <rect x="324" y="133" width="60" height="6" fill="rgba(79,142,247,.1)" rx="1"/>
+        <rect x="324" y="142" width="78" height="6" fill="rgba(79,142,247,.1)" rx="1"/>
+        <text x="370" y="157" text-anchor="middle" font-family="Bangers,cursive" font-size="7" fill="rgba(79,142,247,.6)" letter-spacing="1">PostgreSQL + Python</text>
+      </svg>
+    </div>
+
+    <!-- Internship text content -->
+    <div class="cbpanel cbpanel-full" data-pid="2" style="margin:4px 6px;cursor:pointer;">
+      <div class="p-speedlines"><div></div></div>
+      <div class="cbpanel-inner">
+        <div class="cbp-num">03 · INTERNSHIP</div>
+        <div class="cbp-name" style="font-size:20px;color:#c0241a;">CORBIS SOFT (PVT.) LTD.</div>
+        <p class="cbp-desc" style="font-size:12px;">3 complete AI prototypes shipped in 10 weeks. From zero to working demo for each. YOLOv8 floor-plan dimension reader, Deep Q-Network chess agent, and a role-based ERP system.</p>
+        <div class="cbp-metrics" style="margin-top:8px;">
+          <span class="cbmetric">mAP 0.812</span>
+          <span class="cbmetric">WIN RATE 0→0.437</span>
+          <span class="cbmetric">10 WEEKS</span>
+          <span class="cbmetric">3 PROTOTYPES</span>
+        </div>
+        <div class="cbp-hint">CLICK FOR FULL DETAILS</div>
+      </div>
+      <div class="cbp-fold"></div>
+      <div class="cbp-burst">BOOM!</div>
+    </div>
+
+    <div class="cbook-caption">"THREE SYSTEMS. TEN WEEKS. ZERO COMPROMISES."</div>
+    <div class="cbook-footer"><span>© 2025 CPC</span><span class="cbook-pg">PG. 02</span></div>
+  </div>
+
+</div><!-- /comic-spread-inner -->
+</div><!-- /spread 1 -->
+
+
+<!-- ══════════════════════════════════
+     SPREAD 2 — CPC / BAYAN AI / NETWORK
+══════════════════════════════════ -->
+<div class="comic-spread" data-spread="1">
+<div class="comic-spread-inner">
+
+  <!-- LEFT PAGE -->
+  <div class="cbook-page cbook-page-l">
+    <div class="cbook-spine"></div><div class="cbook-dots"></div>
+    <div class="cbook-header">
+      <span class="cbook-issue">ISSUE #02</span>
+      <span class="cbook-chapter">STARTUP + CLOUD + NETWORKS</span>
+    </div>
+
+    <div style="display:grid;grid-template-rows:1fr 1fr;flex:1;">
+
+      <!-- CPC PLATFORM -->
+      <div class="cbpanel" data-pid="4">
+        <div class="p-speedlines"><div></div></div>
+        <div style="display:grid;grid-template-columns:45% 55%;flex:1;height:100%;">
+          <!-- art column -->
+          <div style="border-right:2px solid #1a0e0a;display:flex;align-items:center;justify-content:center;background:#0a1a0a;padding:8px;flex-shrink:0;">
+            <svg viewBox="0 0 90 110" xmlns="http://www.w3.org/2000/svg" style="width:90px;height:110px;">
+              <rect width="90" height="110" fill="#0a1a0a" rx="3"/>
+              <!-- phone outline -->
+              <rect x="22" y="8" width="46" height="80" rx="6" fill="none" stroke="#25d366" stroke-width="2"/>
+              <rect x="22" y="8" width="46" height="80" rx="6" fill="rgba(37,211,102,.05)"/>
+              <!-- screen content -->
+              <rect x="26" y="22" width="38" height="54" fill="#111" rx="2"/>
+              <!-- chat bubbles -->
+              <rect x="28" y="25" width="22" height="8" rx="3" fill="#25d366" opacity=".9"/>
+              <text x="39" y="31" text-anchor="middle" font-family="Space Mono" font-size="4" fill="#000">Hi! How can</text>
+              <rect x="28" y="36" width="18" height="7" rx="3" fill="#25d366" opacity=".7"/>
+              <text x="37" y="41" text-anchor="middle" font-family="Space Mono" font-size="4" fill="#000">I help you?</text>
+              <rect x="40" y="46" width="22" height="8" rx="3" fill="rgba(255,255,255,.2)"/>
+              <text x="51" y="52" text-anchor="middle" font-family="Space Mono" font-size="4" fill="#fff">Menu pls</text>
+              <rect x="28" y="57" width="30" height="7" rx="3" fill="#25d366" opacity=".8"/>
+              <text x="43" y="62" text-anchor="middle" font-family="Space Mono" font-size="4" fill="#000">Here is our menu!</text>
+              <!-- sub-2s badge -->
+              <rect x="27" y="68" width="36" height="6" rx="2" fill="rgba(245,197,24,.2)" stroke="#F5C518" stroke-width=".8"/>
+              <text x="45" y="73" text-anchor="middle" font-family="Bangers,cursive" font-size="5" fill="#F5C518">SUB-2S LATENCY</text>
+              <!-- home button -->
+              <circle cx="45" cy="94" r="5" fill="none" stroke="#25d366" stroke-width="1.5"/>
+              <!-- WhatsApp logo hint -->
+              <text x="45" y="104" text-anchor="middle" font-family="Bangers,cursive" font-size="7" fill="#25d366" letter-spacing="1">WhatsApp</text>
+            </svg>
+          </div>
+          <!-- content column -->
+          <div class="cbpanel-inner">
+            <div class="cbp-num">05</div>
+            <div class="cbp-name">CPC PLATFORM</div>
+            <p class="cbp-desc">WhatsApp automation SaaS co-founded in 2025. Meta catalogue, billing, sub-2s latency across restaurants, clinics and travel agencies.</p>
+            <div class="cbp-tags"><span class="cbtag">WhatsApp API</span><span class="cbtag">Supabase</span><span class="cbtag">Next.js</span></div>
+            <div class="cbp-metrics"><span class="cbmetric">3+ VERTICALS</span></div>
+            <div class="cbp-hint">CLICK TO EXPAND</div>
+          </div>
+        </div>
+        <div class="cbp-fold"></div>
+        <div class="cbp-burst">KA-POW!</div>
+      </div>
+
+      <!-- BAYAN AI -->
+      <div class="cbpanel" data-pid="5">
+        <div class="p-speedlines"><div></div></div>
+        <div style="display:grid;grid-template-columns:45% 55%;flex:1;height:100%;">
+          <div style="border-right:2px solid #1a0e0a;display:flex;align-items:center;justify-content:center;background:#000d1a;padding:8px;flex-shrink:0;">
+            <svg viewBox="0 0 90 110" xmlns="http://www.w3.org/2000/svg" style="width:90px;height:110px;">
+              <rect width="90" height="110" fill="#000d1a" rx="3"/>
+              <!-- AWS pipeline diagram -->
+              <!-- S3 -->
+              <rect x="5" y="12" width="22" height="14" rx="2" fill="#e67e22" opacity=".85"/>
+              <text x="16" y="22" text-anchor="middle" font-family="Bangers,cursive" font-size="7" fill="#fff">S3</text>
+              <!-- arrow -->
+              <line x1="27" y1="19" x2="35" y2="19" stroke="#F5C518" stroke-width="1.5" marker-end="url(#arr)"/>
+              <!-- Lambda -->
+              <rect x="35" y="12" width="22" height="14" rx="2" fill="#e74c3c" opacity=".85"/>
+              <text x="46" y="22" text-anchor="middle" font-family="Bangers,cursive" font-size="6" fill="#fff">Lambda</text>
+              <!-- arrow down -->
+              <line x1="46" y1="26" x2="46" y2="33" stroke="#F5C518" stroke-width="1.5"/>
+              <!-- Transcribe -->
+              <rect x="30" y="33" width="32" height="14" rx="2" fill="#3498db" opacity=".85"/>
+              <text x="46" y="43" text-anchor="middle" font-family="Bangers,cursive" font-size="6" fill="#fff">Transcribe</text>
+              <!-- arrow down -->
+              <line x1="46" y1="47" x2="46" y2="54" stroke="#F5C518" stroke-width="1.5"/>
+              <!-- Translate -->
+              <rect x="30" y="54" width="32" height="14" rx="2" fill="#9b59b6" opacity=".85"/>
+              <text x="46" y="64" text-anchor="middle" font-family="Bangers,cursive" font-size="6" fill="#fff">Translate</text>
+              <!-- arrow down -->
+              <line x1="46" y1="68" x2="46" y2="75" stroke="#F5C518" stroke-width="1.5"/>
+              <!-- Polly -->
+              <rect x="30" y="75" width="32" height="14" rx="2" fill="#27ae60" opacity=".85"/>
+              <text x="46" y="85" text-anchor="middle" font-family="Bangers,cursive" font-size="6" fill="#fff">Polly</text>
+              <!-- output audio wave -->
+              <polyline points="5,100 12,93 18,105 24,92 30,100" stroke="#27ae60" stroke-width="1.5" fill="none"/>
+              <!-- zero server label -->
+              <rect x="58" y="40" width="28" height="30" rx="2" fill="rgba(245,197,24,.1)" stroke="#F5C518" stroke-width=".8"/>
+              <text x="72" y="53" text-anchor="middle" font-family="Bangers,cursive" font-size="5" fill="#F5C518">ZERO</text>
+              <text x="72" y="62" text-anchor="middle" font-family="Bangers,cursive" font-size="5" fill="#F5C518">SERVERS</text>
+            </svg>
+          </div>
+          <div class="cbpanel-inner">
+            <div class="cbp-num">06</div>
+            <div class="cbp-name">BAYAN AI</div>
+            <p class="cbp-desc">Serverless AWS pipeline: S3 triggers Lambda, Transcribe, Translate, Polly. English lectures become Urdu audio. Auto-scales to zero.</p>
+            <div class="cbp-tags"><span class="cbtag">Lambda</span><span class="cbtag">Step Funcs</span><span class="cbtag">Polly</span></div>
+            <div class="cbp-metrics"><span class="cbmetric">6 AWS SERVICES</span></div>
+            <div class="cbp-hint">CLICK TO EXPAND</div>
+          </div>
+        </div>
+        <div class="cbp-fold"></div>
+        <div class="cbp-burst">CRASH!</div>
+      </div>
+
+    </div>
+    <div class="cbook-footer"><span>DARA BODLA · AI PORTFOLIO</span><span class="cbook-pg">PG. 03</span></div>
+  </div>
+
+  <!-- RIGHT PAGE -->
+  <div class="cbook-page cbook-page-r">
+    <div class="cbook-dots"></div>
+    <div class="cbook-header">
+      <span class="cbook-issue">ISSUE #02</span>
+      <span class="cbook-chapter">NETWORKS + IaC</span>
+    </div>
+
+    <!-- NETWORK TRAFFIC PREDICTION — tall feature panel -->
+    <div class="cbpanel" data-pid="6" style="flex:1;margin:4px 6px 3px;">
+      <div class="p-speedlines"><div></div></div>
+      <div style="display:grid;grid-template-columns:1fr;flex:1;">
+        <div style="background:#00050f;padding:10px;border-bottom:2px solid #1a0e0a;flex-shrink:0;">
+          <svg viewBox="0 0 400 110" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:110px;">
+            <rect width="400" height="110" fill="#00050f"/>
+            <!-- 23-node network visualization -->
+            <!-- connections -->
+            <g stroke="rgba(79,142,247,.3)" stroke-width="1" fill="none">
+              <line x1="60"  y1="55" x2="110" y2="30"/><line x1="60"  y1="55" x2="110" y2="80"/>
+              <line x1="110" y1="30" x2="160" y2="20"/><line x1="110" y1="30" x2="160" y2="55"/>
+              <line x1="110" y1="80" x2="160" y2="55"/><line x1="110" y1="80" x2="160" y2="90"/>
+              <line x1="160" y1="20" x2="210" y2="35"/><line x1="160" y1="55" x2="210" y2="35"/>
+              <line x1="160" y1="55" x2="210" y2="70"/><line x1="160" y1="90" x2="210" y2="70"/>
+              <line x1="210" y1="35" x2="260" y2="20"/><line x1="210" y1="35" x2="260" y2="55"/>
+              <line x1="210" y1="70" x2="260" y2="55"/><line x1="210" y1="70" x2="260" y2="85"/>
+              <line x1="260" y1="20" x2="310" y2="35"/><line x1="260" y1="55" x2="310" y2="35"/>
+              <line x1="260" y1="55" x2="310" y2="70"/><line x1="260" y1="85" x2="310" y2="70"/>
+              <line x1="310" y1="35" x2="360" y2="55"/><line x1="310" y1="70" x2="360" y2="55"/>
+            </g>
+            <!-- active traffic flow (highlighted) -->
+            <g stroke="#F5C518" stroke-width="2" fill="none" opacity=".7">
+              <line x1="60" y1="55" x2="110" y2="30"/><line x1="110" y1="30" x2="160" y2="55"/>
+              <line x1="160" y1="55" x2="210" y2="35"/><line x1="210" y1="35" x2="260" y2="55"/>
+              <line x1="260" y1="55" x2="310" y2="35"/><line x1="310" y1="35" x2="360" y2="55"/>
+            </g>
+            <!-- nodes -->
+            <g fill="#4f8ef7">
+              <circle cx="60"  cy="55" r="6"/><circle cx="110" cy="30" r="5"/><circle cx="110" cy="80" r="5"/>
+              <circle cx="160" cy="20" r="5"/><circle cx="160" cy="55" r="5"/><circle cx="160" cy="90" r="5"/>
+              <circle cx="210" cy="35" r="5"/><circle cx="210" cy="70" r="5"/>
+              <circle cx="260" cy="20" r="5"/><circle cx="260" cy="55" r="5"/><circle cx="260" cy="85" r="5"/>
+              <circle cx="310" cy="35" r="5"/><circle cx="310" cy="70" r="5"/><circle cx="360" cy="55" r="8" fill="#c0241a"/>
+            </g>
+            <!-- LSTM prediction line -->
+            <polyline points="60,75 110,70 160,65 210,60 260,58 310,62 360,65"
+              stroke="#c0241a" stroke-width="2" fill="none" stroke-dasharray="4 3" opacity=".9"/>
+            <!-- labels -->
+            <text x="200" y="108" text-anchor="middle" font-family="Bangers,cursive" font-size="9" fill="#4f8ef7" letter-spacing="2">23-NODE BACKBONE NETWORK</text>
+            <text x="362" y="48" font-family="Space Mono" font-size="5" fill="#c0241a">LSTM</text>
+          </svg>
+        </div>
+        <div class="cbpanel-inner">
+          <div class="cbp-num">07</div>
+          <div class="cbp-name">NETWORK TRAFFIC PREDICTION</div>
+          <p class="cbp-desc">LSTM closed-loop QoS controller on 23-node backbone. 90.6% fewer congestion events (468 to 44). Sub-12ms RTT. Autonomous retraining every 500 samples with drift detection.</p>
+          <div class="cbp-tags"><span class="cbtag">LSTM</span><span class="cbtag">AnyLogic</span><span class="cbtag">QoS</span></div>
+          <div class="cbp-metrics"><span class="cbmetric">90.6% FEWER EVENTS</span><span class="cbmetric">SUB-12MS RTT</span></div>
+          <div class="cbp-hint">CLICK TO EXPAND</div>
+        </div>
+      </div>
+      <div class="cbp-fold"></div>
+      <div class="cbp-burst">BIFF!</div>
+    </div>
+
+    <!-- UNIEVENT small panel -->
+    <div class="cbpanel" data-pid="8" style="flex:0 0 auto;margin:0 6px 4px;min-height:120px;">
+      <div class="p-speedlines"><div></div></div>
+      <div style="display:grid;grid-template-columns:36% 64%;height:100%;">
+        <div style="background:#0a001a;display:flex;align-items:center;justify-content:center;border-right:2px solid #1a0e0a;padding:6px;">
+          <svg viewBox="0 0 70 90" xmlns="http://www.w3.org/2000/svg" style="width:60px;height:80px;">
+            <rect width="70" height="90" fill="#0a001a"/>
+            <!-- cloud icon -->
+            <ellipse cx="35" cy="35" rx="22" ry="14" fill="rgba(245,197,24,.15)" stroke="#F5C518" stroke-width="1.5"/>
+            <ellipse cx="22" cy="38" rx="12" ry="8" fill="rgba(245,197,24,.12)" stroke="#F5C518" stroke-width="1.5"/>
+            <ellipse cx="48" cy="38" rx="12" ry="8" fill="rgba(245,197,24,.12)" stroke="#F5C518" stroke-width="1.5"/>
+            <rect x="13" y="38" width="44" height="10" fill="rgba(245,197,24,.1)"/>
+            <!-- download arrow -->
+            <line x1="35" y1="50" x2="35" y2="68" stroke="#F5C518" stroke-width="2"/>
+            <polyline points="28,62 35,70 42,62" stroke="#F5C518" stroke-width="2" fill="none"/>
+            <text x="35" y="82" text-anchor="middle" font-family="Bangers,cursive" font-size="7" fill="#F5C518">IaC</text>
+          </svg>
+        </div>
+        <div class="cbpanel-inner">
+          <div class="cbp-num">09</div>
+          <div class="cbp-name">UNIEVENT (AWS)</div>
+          <p class="cbp-desc">473-line CloudFormation. 20+ resources. Deploy time 45 min to 5 min.</p>
+          <div class="cbp-metrics"><span class="cbmetric">473 LINE CF</span><span class="cbmetric">45→5 MIN</span></div>
+          <div class="cbp-hint">CLICK TO EXPAND</div>
+        </div>
+      </div>
+      <div class="cbp-fold"></div>
+      <div class="cbp-burst">ZAP!</div>
+    </div>
+
+    <div class="cbook-footer"><span>© 2025 CPC</span><span class="cbook-pg">PG. 04</span></div>
+  </div>
+
+</div>
+</div><!-- /spread 2 -->
+
+
+<!-- ══════════════════════════════════
+     SPREAD 3 — AI SCIENTIST / EXTRA CONTEXT
+══════════════════════════════════ -->
+<div class="comic-spread" data-spread="2">
+<div class="comic-spread-inner">
+
+  <!-- LEFT PAGE — THE AI SCIENTIST full feature -->
+  <div class="cbook-page cbook-page-l cbook-page-feature" style="background:linear-gradient(135deg,#050a14,#0a0f20);">
+    <div class="cbook-spine"></div><div class="cbook-dots"></div>
+    <div class="cbook-header" style="background:#0d2847;border-bottom:3px solid #1a3d6e;">
+      <span class="cbook-issue" style="color:#60a5fa;">ISSUE #03</span>
+      <span class="cbook-chapter" style="color:rgba(96,165,250,.6);">HACKATHON PROJECT</span>
+    </div>
+
+    <!-- Feature art -->
+    <svg viewBox="0 0 460 200" xmlns="http://www.w3.org/2000/svg" style="width:100%;flex-shrink:0;display:block;">
+      <rect width="460" height="200" fill="#050a14"/>
+      <!-- stars background -->
+      <g fill="#fff" opacity=".4">
+        <circle cx="20" cy="15" r="1"/><circle cx="80" cy="8" r="1.5"/><circle cx="140" cy="20" r="1"/>
+        <circle cx="200" cy="10" r="1"/><circle cx="260" cy="18" r="1.5"/><circle cx="320" cy="7" r="1"/>
+        <circle cx="380" cy="15" r="1"/><circle cx="440" cy="10" r="1.5"/>
+        <circle cx="50" cy="40" r="1"/><circle cx="110" cy="35" r="1"/><circle cx="170" cy="45" r="1.5"/>
+        <circle cx="290" cy="38" r="1"/><circle cx="350" cy="42" r="1"/><circle cx="410" cy="36" r="1.5"/>
+      </g>
+      <!-- hypothesis box -->
+      <rect x="20" y="30" width="130" height="50" rx="4" fill="rgba(96,165,250,.12)" stroke="#60a5fa" stroke-width="1.5"/>
+      <text x="85" y="48" text-anchor="middle" font-family="Bangers,cursive" font-size="9" fill="#60a5fa" letter-spacing="2">HYPOTHESIS</text>
+      <text x="85" y="60" text-anchor="middle" font-family="Special Elite,serif" font-size="6" fill="rgba(240,232,208,.7)">"Does X cause Y under Z?"</text>
+      <text x="85" y="72" text-anchor="middle" font-family="Space Mono,monospace" font-size="5" fill="rgba(96,165,250,.6)">Input: Natural language</text>
+      <!-- arrow right -->
+      <line x1="152" y1="55" x2="175" y2="55" stroke="#60a5fa" stroke-width="2"/>
+      <polygon points="175,51 183,55 175,59" fill="#60a5fa"/>
+      <!-- LLM box -->
+      <rect x="183" y="30" width="94" height="50" rx="4" fill="rgba(139,92,246,.15)" stroke="#8b5cf6" stroke-width="1.5"/>
+      <text x="230" y="48" text-anchor="middle" font-family="Bangers,cursive" font-size="9" fill="#8b5cf6" letter-spacing="1">LLM + RAG</text>
+      <text x="230" y="58" text-anchor="middle" font-family="Space Mono,monospace" font-size="5" fill="rgba(139,92,246,.7)">LangChain</text>
+      <text x="230" y="67" text-anchor="middle" font-family="Space Mono,monospace" font-size="5" fill="rgba(139,92,246,.7)">Semantic Scholar</text>
+      <text x="230" y="76" text-anchor="middle" font-family="Space Mono,monospace" font-size="5" fill="rgba(139,92,246,.7)">Live papers</text>
+      <!-- arrow right -->
+      <line x1="279" y1="55" x2="302" y2="55" stroke="#8b5cf6" stroke-width="2"/>
+      <polygon points="302,51 310,55 302,59" fill="#8b5cf6"/>
+      <!-- output box -->
+      <rect x="310" y="20" width="130" height="160" rx="4" fill="rgba(16,185,129,.12)" stroke="#10b981" stroke-width="1.5"/>
+      <text x="375" y="38" text-anchor="middle" font-family="Bangers,cursive" font-size="9" fill="#10b981" letter-spacing="2">EXPERIMENT</text>
+      <rect x="320" y="44" width="110" height="12" rx="2" fill="rgba(16,185,129,.15)"/>
+      <text x="375" y="53" text-anchor="middle" font-family="Space Mono,monospace" font-size="5" fill="rgba(16,185,129,.8)">Methodology</text>
+      <rect x="320" y="60" width="110" height="12" rx="2" fill="rgba(16,185,129,.15)"/>
+      <text x="375" y="69" text-anchor="middle" font-family="Space Mono,monospace" font-size="5" fill="rgba(16,185,129,.8)">Controls &amp; Variables</text>
+      <rect x="320" y="76" width="110" height="12" rx="2" fill="rgba(16,185,129,.15)"/>
+      <text x="375" y="85" text-anchor="middle" font-family="Space Mono,monospace" font-size="5" fill="rgba(16,185,129,.8)">Metrics &amp; KPIs</text>
+      <rect x="320" y="92" width="110" height="12" rx="2" fill="rgba(16,185,129,.15)"/>
+      <text x="375" y="101" text-anchor="middle" font-family="Space Mono,monospace" font-size="5" fill="rgba(16,185,129,.8)">Literature Review</text>
+      <rect x="320" y="108" width="110" height="12" rx="2" fill="rgba(16,185,129,.15)"/>
+      <text x="375" y="117" text-anchor="middle" font-family="Space Mono,monospace" font-size="5" fill="rgba(16,185,129,.8)">Export: PDF / JSON</text>
+      <!-- title text — moved above the badge -->
+      <text x="85" y="98" text-anchor="middle" font-family="Bangers,cursive" font-size="20" fill="#60a5fa" letter-spacing="3" opacity=".65">THE AI</text>
+      <text x="85" y="116" text-anchor="middle" font-family="Bangers,cursive" font-size="20" fill="#60a5fa" letter-spacing="3" opacity=".65">SCIENTIST</text>
+      <!-- Hack Nation badge -->
+      <rect x="15" y="128" width="130" height="34" rx="3" fill="rgba(245,197,24,.1)" stroke="#F5C518" stroke-width="1"/>
+      <text x="80" y="142" text-anchor="middle" font-family="Bangers,cursive" font-size="8" fill="#F5C518" letter-spacing="1">HACK NATION × WORLD BANK</text>
+      <text x="80" y="155" text-anchor="middle" font-family="Space Mono,monospace" font-size="6" fill="rgba(245,197,24,.6)">Youth Summit AI Track</text>
+    </svg>
+
+    <div class="cbpanel cbpanel-full" data-pid="7" style="margin:3px 5px 3px;cursor:pointer;">
+      <div class="p-speedlines"><div></div></div>
+      <div class="cbpanel-inner">
+        <div class="cbp-num">08</div>
+        <div class="cbp-name" style="font-size:19px;color:#0d2847;">THE AI SCIENTIST</div>
+        <p class="cbp-desc">Hypothesis-to-experiment pipeline using Semantic Scholar API for live paper grounding. Built for the Hack Nation x World Bank Youth Summit. Exports a full structured experiment plan in PDF or JSON.</p>
+        <div class="cbp-tags"><span class="cbtag">Next.js</span><span class="cbtag">LangChain</span><span class="cbtag">Semantic Scholar</span><span class="cbtag">OpenAI</span></div>
+        <div class="cbp-hint">CLICK TO EXPAND</div>
+      </div>
+      <div class="cbp-fold"></div>
+      <div class="cbp-burst">POW!</div>
+    </div>
+
+    <div class="cbook-caption">"FROM HYPOTHESIS TO FULL EXPERIMENT IN SECONDS."</div>
+    <div class="cbook-footer"><span>DARA BODLA · AI PORTFOLIO</span><span class="cbook-pg">PG. 05</span></div>
+  </div>
+
+  <!-- RIGHT PAGE — skills/stats/about filler (no project repeats) -->
+  <div class="cbook-page cbook-page-r" style="background:#f5edcc;">
+    <div class="cbook-dots"></div>
+    <div class="cbook-header" style="background:#0a0608;">
+      <span class="cbook-issue">ISSUE #03</span>
+      <span class="cbook-chapter">ABOUT THE ENGINEER</span>
+    </div>
+
+    <!-- Profile panel -->
+    <div style="padding:14px 16px 10px;border-bottom:2.5px solid #1a0e0a;flex-shrink:0;position:relative;z-index:3;">
+      <svg viewBox="0 0 400 80" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:80px;">
+        <rect width="400" height="80" fill="rgba(0,0,0,.03)" rx="2"/>
+        <!-- stat boxes -->
+        <rect x="5"   y="8" width="85" height="65" rx="3" fill="rgba(245,197,24,.08)" stroke="#F5C518" stroke-width="1.5"/>
+        <text x="47"  y="38" text-anchor="middle" font-family="Bangers,cursive" font-size="28" fill="#F5C518">3rd</text>
+        <text x="47"  y="52" text-anchor="middle" font-family="Space Mono,monospace" font-size="6" fill="rgba(26,14,10,.5)">YEAR · GIKI</text>
+        <text x="47"  y="65" text-anchor="middle" font-family="Space Mono,monospace" font-size="5" fill="rgba(26,14,10,.4)">BSc AI</text>
+        <rect x="100" y="8" width="85" height="65" rx="3" fill="rgba(192,36,26,.08)" stroke="#c0241a" stroke-width="1.5"/>
+        <text x="142" y="38" text-anchor="middle" font-family="Bangers,cursive" font-size="28" fill="#c0241a">10+</text>
+        <text x="142" y="52" text-anchor="middle" font-family="Space Mono,monospace" font-size="6" fill="rgba(26,14,10,.5)">PROJECTS</text>
+        <text x="142" y="65" text-anchor="middle" font-family="Space Mono,monospace" font-size="5" fill="rgba(26,14,10,.4)">shipped</text>
+        <rect x="195" y="8" width="85" height="65" rx="3" fill="rgba(79,142,247,.08)" stroke="#4f8ef7" stroke-width="1.5"/>
+        <text x="237" y="38" text-anchor="middle" font-family="Bangers,cursive" font-size="28" fill="#4f8ef7">1</text>
+        <text x="237" y="52" text-anchor="middle" font-family="Space Mono,monospace" font-size="6" fill="rgba(26,14,10,.5)">STARTUP</text>
+        <text x="237" y="65" text-anchor="middle" font-family="Space Mono,monospace" font-size="5" fill="rgba(26,14,10,.4)">CPC</text>
+        <rect x="290" y="8" width="105" height="65" rx="3" fill="rgba(16,185,129,.08)" stroke="#10b981" stroke-width="1.5"/>
+        <text x="342" y="35" text-anchor="middle" font-family="Bangers,cursive" font-size="18" fill="#10b981">4 CERTS</text>
+        <text x="342" y="50" text-anchor="middle" font-family="Space Mono,monospace" font-size="5" fill="rgba(26,14,10,.4)">IBM · Google · Wharton</text>
+        <text x="342" y="65" text-anchor="middle" font-family="Space Mono,monospace" font-size="5" fill="rgba(26,14,10,.35)">Multan / Lahore · PK</text>
+      </svg>
+    </div>
+
+    <!-- Speech bubble / quote panel -->
+    <div style="padding:12px 16px;border-bottom:2px solid rgba(26,14,10,.1);position:relative;z-index:3;flex-shrink:0;">
+      <div style="background:#fff;border:2.5px solid #1a0e0a;border-radius:8px;padding:10px 14px;position:relative;box-shadow:3px 3px 0 rgba(26,14,10,.2);">
+        <div style="font-family:'Permanent Marker',cursive;font-size:12px;color:#1a0e0a;line-height:1.5;">"I'm not saying I'm Batman… but I did push to main."</div>
+        <div style="position:absolute;bottom:-12px;left:24px;width:0;height:0;border-left:10px solid transparent;border-right:10px solid transparent;border-top:12px solid #1a0e0a;"></div>
+      </div>
+      <div style="margin-top:14px;font-family:'Bangers',cursive;font-size:13px;letter-spacing:3px;color:rgba(26,14,10,.5);">— DARA BODLA, GIKI 2025</div>
+    </div>
+
+    <!-- Skills radar (SVG art) -->
+    <div style="flex:1;display:flex;align-items:center;justify-content:center;padding:10px;position:relative;z-index:3;overflow:hidden;">
+      <svg viewBox="0 0 300 180" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-height:160px;">
+        <!-- radar chart bg -->
+        <polygon points="150,20 230,60 260,130 200,170 100,170 40,130 70,60" fill="rgba(245,197,24,.04)" stroke="rgba(26,14,10,.08)" stroke-width="1"/>
+        <polygon points="150,40 215,72 240,128 192,160 108,160 60,128 85,72" fill="rgba(245,197,24,.05)" stroke="rgba(26,14,10,.07)" stroke-width="1"/>
+        <polygon points="150,60 200,84 220,126 184,150 116,150 80,126 100,84" fill="rgba(245,197,24,.05)" stroke="rgba(26,14,10,.06)" stroke-width="1"/>
+        <!-- skill fill area -->
+        <polygon points="150,28 224,68 248,128 194,162 106,162 52,128 78,65" fill="rgba(192,36,26,.15)" stroke="#c0241a" stroke-width="1.5"/>
+        <!-- skill labels -->
+        <text x="150" y="15"  text-anchor="middle" font-family="Bangers,cursive" font-size="9" fill="#c0241a" letter-spacing="1">DEEP LEARNING</text>
+        <text x="252" y="60"  text-anchor="start"  font-family="Bangers,cursive" font-size="8" fill="rgba(26,14,10,.6)">MLOps</text>
+        <text x="252" y="132" text-anchor="start"  font-family="Bangers,cursive" font-size="8" fill="rgba(26,14,10,.6)">Cloud</text>
+        <text x="150" y="182" text-anchor="middle" font-family="Bangers,cursive" font-size="8" fill="rgba(26,14,10,.6)">FULL STACK</text>
+        <text x="48"  y="132" text-anchor="end"    font-family="Bangers,cursive" font-size="8" fill="rgba(26,14,10,.6)">CV</text>
+        <text x="48"  y="60"  text-anchor="end"    font-family="Bangers,cursive" font-size="8" fill="rgba(26,14,10,.6)">NLP</text>
+        <text x="78"  y="60"  text-anchor="middle" font-family="Bangers,cursive" font-size="8" fill="rgba(26,14,10,.6)">RL</text>
+        <!-- center dot -->
+        <circle cx="150" cy="95" r="3" fill="#c0241a"/>
+      </svg>
+    </div>
+
+    <div class="cbook-footer"><span>© 2025 CPC</span><span class="cbook-pg">PG. 06</span></div>
+  </div>
+
+</div>
+</div><!-- /spread 3 -->
+
+      </div><!-- /comic-spread-wrap -->
+      <button class="comic-nav-btn" id="comicNext">&#8250;</button>
+    </div><!-- /comic-book-row -->
+
+    <div class="comic-spread-dots" id="comicSpreadDots">
+      <div class="csd on"></div><div class="csd"></div><div class="csd"></div>
+    </div>
+  </div><!-- /comic-book-outer -->
   <span class="pg-num">#04</span>
 </section>
 
@@ -1129,7 +2232,7 @@ footer{
     <div class="c-links">
       <a href="https://github.com/DaraBodla" target="_blank" class="c-link rv-l" style="transition-delay:.18s">GITHUB</a>
       <a href="mailto:darabodla26@gmail.com"  class="c-link rv-l" style="transition-delay:.26s">EMAIL</a>
-      <a href="https://linkedin.com/in/dara-shikoh-bodla-1b4b19333" target="_blank" class="c-link rv-l" style="transition-delay:.34s">LINKEDIN</a>
+      <a href="https://www.linkedin.com/in/dara-shikoh-bodla-1b4b19333" target="_blank" class="c-link rv-l" style="transition-delay:.34s">LINKEDIN</a>
     </div>
   </div>
   <div class="contact-r">
@@ -1172,36 +2275,36 @@ footer{
 ══════════════════════════════════════ */
 const PROJECTS = [
   {
-    num:'01', title:'LIP FILLER — SILENT SPEECH RECOGNITION',
+    num:'01', title:'LIP FILLER, SILENT SPEECH RECOGNITION',
     desc:'End-to-end lip-reading pipeline built for AI331L at GIKI. Takes 29-frame, 96×96 video clips and classifies spoken words without any audio signal.',
     bullets:[
       '3D-CNN ResNet-18 backbone extracts spatiotemporal features from lip-region clips',
       'MS-TCN (Multi-Scale Temporal CNN) refines temporal dynamics across multiple resolutions',
       'BiLSTM + custom temporal self-attention head for final classification',
-      '100-class LRW (Lip Reading in the Wild) dataset subset',
-      '11-module, 2,900+ line production codebase with 3-phase curriculum training',
+      '100 class LRW (Lip Reading in the Wild) dataset subset',
+      '11-module, 2,900+ line production codebase with 3 phase curriculum training',
       'Label smoothing, mixed-precision training on T4 GPU, Colab-ready'
     ],
     metrics:['100 CLASSES','3-PHASE TRAINING','T4 GPU','2900+ LINES'],
     tags:['3D-CNN','BiLSTM','MS-TCN','Temporal Attention','PyTorch','MindSpore']
   },
   {
-    num:'02', title:'MOVIE REVENUE PREDICTOR — MLOPS PLATFORM',
-    desc:'Full production MLOps pipeline for binary revenue prediction on TMDB data — covers ingestion, training, deployment, and monitoring.',
+    num:'02', title:'MOVIE REVENUE PREDICTOR, MLOPS PLATFORM',
+    desc:'Full production MLOps pipeline for binary revenue prediction on TMDB data, covers ingestion, training, deployment, and monitoring.',
     bullets:[
       'Live TMDB API ingestion with automated feature engineering',
       'Ensemble model: XGBoost + Random Forest with ROC-AUC 0.80, F1 0.74',
-      'FastAPI serving layer with Streamlit dashboard for real-time predictions',
+      'FastAPI serving layer with Streamlit dashboard for real time predictions',
       'Prefect orchestration for scheduled retraining pipelines',
       'Docker + Docker Compose for reproducible environments',
-      'GitHub Actions CI/CD — automated test, build, and deploy on push'
+      'GitHub Actions CI/CD, automated test, build, and deploy on push'
     ],
     metrics:['ROC-AUC 0.80','F1 0.74','GITHUB ACTIONS CI/CD','DOCKER'],
     tags:['XGBoost','Random Forest','FastAPI','Prefect','Docker','Streamlit','GitHub Actions']
   },
   {
     num:'03', title:'CORBIS SOFT INTERNSHIP — 3 AI PROTOTYPES',
-    desc:'AI Intern at Corbis Soft (Pvt.) Ltd., Jun–Jul 2025. Shipped 3 complete end-to-end AI systems in 10 weeks.',
+    desc:'AI Intern at Corbis Soft (Pvt.) Ltd., Jun–Aug 2024. Shipped 3 complete end to end AI systems in 10 weeks.',
     bullets:[
       'Dimension Reader: YOLOv8 floor-plan region detection + OCR text extraction pipeline. mAP@0.5 = 0.812',
       'Python Chess DQN Agent: Deep Q-Learning RL agent. Win rate 0.00 → 0.437, Avg Reward −2.70 → 58.67, Game Length 14 → 74.8 over 300 episodes',
@@ -1213,22 +2316,22 @@ const PROJECTS = [
   },
   {
     num:'04', title:'ASL SIGN LANGUAGE DETECTOR',
-    desc:'26-class American Sign Language letter detector with real-time FastAPI webcam inference.',
+    desc:'26-class American Sign Language letter detector with real time FastAPI webcam inference.',
     bullets:[
       'Faster R-CNN with MobileNetV3-Large FPN backbone on Roboflow ASL dataset (1,728 images)',
       'mAP@0.5 = 87.31%, classification accuracy 81.94%, detection rate 97.2%',
       'Custom webcam images added to training set for robustness',
-      'FastAPI deployment with real-time bounding box overlay and live classification feed',
+      'FastAPI deployment with real time bounding box overlay and live classification feed',
       'Handles partial occlusions and varied lighting conditions'
     ],
     metrics:['mAP 87.31%','ACCURACY 81.94%','DETECTION RATE 97.2%','1728 IMAGES'],
     tags:['Faster R-CNN','MobileNetV3','FPN','PyTorch','FastAPI','Roboflow','Computer Vision']
   },
   {
-    num:'05', title:'CPC PLATFORM — WHATSAPP AUTOMATION STARTUP',
-    desc:'Co-founded and built CPC: a WhatsApp automation SaaS platform for small businesses. Currently serving 3+ verticals.',
+    num:'05', title:'CPC PLATFORM, WHATSAPP AUTOMATION STARTUP',
+    desc:'Co founded in 2025 and built CPC: a WhatsApp automation SaaS platform for small businesses. Currently serving 3+ verticals.',
     bullets:[
-      'Webhook ingestion → backend routing → automated replies with sub-2s latency',
+      'Webhook ingestion, backend routing, automated replies with sub 2s latency',
       'Meta catalogue integration for restaurant menus and product listings',
       'Admin onboarding portal for business clients with session and user persistence',
       'Billing and subscription system with Railway + Vercel deployment',
@@ -1239,42 +2342,42 @@ const PROJECTS = [
     tags:['WhatsApp API','FastAPI','Supabase','Next.js','Railway','Vercel','Meta Business API']
   },
   {
-    num:'06', title:'BAYAN AI — SERVERLESS LECTURE PIPELINE',
+    num:'06', title:'BAYAN AI, SERVERLESS LECTURE PIPELINE',
     desc:'AWS serverless pipeline that processes English academic lectures and produces Urdu audio narrations automatically.',
     bullets:[
-      'AWS Step Functions orchestrate the full pipeline end-to-end',
+      'AWS Step Functions orchestrate the full pipeline end to end',
       'S3 trigger → Lambda transcription via AWS Transcribe',
       'AWS Translate converts English transcript to Urdu',
       'AWS Polly synthesises natural-sounding Urdu audio output',
       'DynamoDB stores job metadata and status',
-      'API Gateway WebSockets for real-time progress updates to the client',
-      'Fully serverless — zero server management, auto-scales to zero'
+      'API Gateway WebSockets for real time progress updates to the client',
+      'Fully serverless, zero server management, auto scales to zero'
     ],
     metrics:['100% SERVERLESS','6 AWS SERVICES','WEBSOCKET UPDATES','AUTO-SCALES'],
     tags:['AWS Step Functions','Lambda','Transcribe','Translate','Polly','DynamoDB','API Gateway']
   },
   {
-    num:'07', title:'NETWORK TRAFFIC PREDICTION — LSTM QoS CONTROLLER',
-    desc:'Replication and extension of Azzouni & Pujolle (2017). LSTM on a 23-node backbone network wired into a live closed-loop QoS control system.',
+    num:'07', title:'NETWORK TRAFFIC PREDICTION, LSTM QoS CONTROLLER',
+    desc:'Replication and extension of Azzouni & Pujolle (2017). LSTM on a 23 node backbone network wired into a live closed loop QoS control system.',
     bullets:[
       'LSTM ties FFNN baseline on MSE (0.000282 vs 0.000279) while enabling live control',
       'Hybrid QoS controller achieves 90.6% fewer congestion events (468 → 44)',
       '75% less buffer overflow vs reactive baseline',
-      'AnyLogic simulation POSTs live traffic matrices to FastAPI LSTM service at sub-12ms RTT',
+      'AnyLogic simulation POSTs live traffic matrices to FastAPI LSTM service at sub 12ms RTT',
       'Autonomous retraining every 500 samples with drift detection',
-      'Full closed-loop: predict → control → measure → retrain'
+      'Full closed loop: predict → control → measure → retrain'
     ],
     metrics:['90.6% FEWER CONGESTION EVENTS','75% LESS OVERFLOW','SUB-12MS RTT','23-NODE NETWORK'],
     tags:['LSTM','AnyLogic','FastAPI','QoS','Network Simulation','Time-Series','MLOps']
   },
   {
-    num:'08', title:'THE AI SCIENTIST — HACKATHON PROJECT',
+    num:'08', title:'THE AI SCIENTIST, HACKATHON PROJECT',
     desc:'Next.js application that turns a scientific hypothesis into a complete, structured experiment plan using LLMs and live paper search.',
     bullets:[
       'Input: research hypothesis → Output: full experiment plan with methodology, controls, metrics',
       'Semantic Scholar API integration for live paper retrieval and grounding',
-      'Built for Hack-Nation × World Bank Youth Summit AI track',
-      'Precision Science Lab UI design system — dark space aesthetic',
+      'Built for Hack Nation × World Bank Youth Summit AI track',
+      'Precision Science Lab UI design system, dark space aesthetic',
       'LLM-powered hypothesis decomposition and literature review summarisation',
       'Export to structured JSON / PDF report'
     ],
@@ -1282,12 +2385,12 @@ const PROJECTS = [
     tags:['Next.js','LangChain','Semantic Scholar','OpenAI','Tailwind CSS','Hackathon']
   },
   {
-    num:'09', title:'UNIEVENT — AWS CLOUD DEPLOYMENT',
+    num:'09', title:'UNIEVENT, AWS CLOUD DEPLOYMENT',
     desc:'Flask-based event management app fully deployed on AWS using Infrastructure-as-Code.',
     bullets:[
-      '473-line CloudFormation template provisioning 20+ resources from scratch',
-      'VPC with public/private subnets, EC2×2 (multi-AZ), ALB, S3, IAM roles',
-      'Multi-AZ fault tolerance with 30-second health checks and auto-failover',
+      '473 line CloudFormation template provisioning 20+ resources from scratch',
+      'VPC with public/private subnets, EC2×2 (multi AZ), ALB, S3, IAM roles',
+      'Multi-AZ fault tolerance with 30-second health checks and auto failover',
       'Ticketmaster API integration for live event data',
       'Deployment time reduced from 45 minutes (manual) to 5 minutes (IaC)',
       'Full teardown and redeploy in single CLI command'
@@ -1317,11 +2420,11 @@ document.querySelectorAll('a,button,.pcard,.stag,.nd,.c-link').forEach(el=>{
 /* ══════════════════════════════════════
    INTRO
 ══════════════════════════════════════ */
-setTimeout(()=>document.getElementById('intro').classList.add('out'),2400);
-setTimeout(()=>document.getElementById('intro').remove(),3100);
+setTimeout(()=>{var _i=document.getElementById('intro');if(_i)_i.classList.add('out');},2400);
+setTimeout(()=>{var _i=document.getElementById('intro');if(_i)_i.remove();},3100);
 
 /* ══════════════════════════════════════
-   RAIN CANVAS — fixed to hero-r bounds
+   RAIN CANVAS, fixed to hero-r bounds
 ══════════════════════════════════════ */
 (function(){
   const c=document.getElementById('rainCv');
@@ -1335,8 +2438,8 @@ setTimeout(()=>document.getElementById('intro').remove(),3100);
       x:Math.random()*W,
       y:Math.random()*H,
       s:1.5+Math.random()*3,
-      l:10+Math.random()*20,
-      op:0.3+Math.random()*0.5
+      l:14+Math.random()*26,
+      op:0.55+Math.random()*0.45
     }));
   }
 
@@ -1359,7 +2462,7 @@ setTimeout(()=>document.getElementById('intro').remove(),3100);
     drops.forEach(d=>{
       ctx.beginPath();
       ctx.strokeStyle=`rgba(245,197,24,${d.op})`;
-      ctx.lineWidth=0.8;
+      ctx.lineWidth=1.2;
       ctx.moveTo(d.x,d.y);
       ctx.lineTo(d.x-1.5,d.y+d.l);
       ctx.stroke();
@@ -1446,37 +2549,14 @@ function toast(msg,dur=2800){
 /* ══════════════════════════════════════
    PROJECT MODAL
 ══════════════════════════════════════ */
-document.getElementById('projGrid').addEventListener('click',e=>{
-  const card=e.target.closest('.pcard');if(!card)return;
-  const pid=parseInt(card.dataset.pid);
-  const p=PROJECTS[pid];if(!p)return;
-  document.getElementById('mNum').textContent='PROJECT '+p.num;
-  document.getElementById('mTitle').textContent=p.title;
-  const body=document.getElementById('mBody');
-  body.innerHTML=`
-    <p class="modal-desc">${p.desc}</p>
-    <div class="modal-section">
-      <div class="modal-section-title">DETAILS</div>
-      <ul class="modal-bullets">${p.bullets.map(b=>`<li>${b}</li>`).join('')}</ul>
-    </div>
-    <div class="modal-section">
-      <div class="modal-section-title">KEY METRICS</div>
-      <div>${p.metrics.map(m=>`<span class="modal-metric">${m}</span>`).join('')}</div>
-    </div>
-    <div class="modal-section">
-      <div class="modal-section-title">TECH STACK</div>
-      <div class="modal-tags">${p.tags.map(t=>`<span class="modal-tag">${t}</span>`).join('')}</div>
-    </div>
-  `;
-  document.getElementById('modalBg').classList.add('open');
-  document.body.style.overflow='hidden';
-});
+/* projGrid removed — comic book handles panels */
 function closeModal(){
-  document.getElementById('modalBg').classList.remove('open');
+  var _mb=document.getElementById('modalBg');
+  if(_mb) _mb.classList.remove('open');
   document.body.style.overflow='';
 }
-document.getElementById('mClose').addEventListener('click',closeModal);
-document.getElementById('modalBg').addEventListener('click',e=>{if(e.target===document.getElementById('modalBg'))closeModal();});
+var _mc=document.getElementById('mClose'); if(_mc) _mc.addEventListener('click',closeModal);
+var _mgb=document.getElementById('modalBg'); if(_mgb) _mgb.addEventListener('click',function(e){if(e.target===_mgb)closeModal();});
 document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal();});
 
 /* ══════════════════════════════════════
@@ -1484,18 +2564,18 @@ document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal();});
 ══════════════════════════════════════ */
 const overlay=document.getElementById('bat-signal-overlay');
 const siteContent=document.getElementById('site-content');
+if(!overlay||!siteContent){console.warn('bat-signal elements missing');}
 let idleT;
 function resetIdle(){
   clearTimeout(idleT);
   idleT=setTimeout(()=>{
-    overlay.classList.add('show');
-    siteContent.style.filter='blur(5px)';
-    siteContent.style.transition='filter .8s';
+    if(overlay) overlay.classList.add('show');
+    if(siteContent){siteContent.style.filter='blur(5px)';siteContent.style.transition='filter .8s';}
   },20000);
 }
 function wakeUp(){
-  overlay.classList.remove('show');
-  siteContent.style.filter='';
+  if(overlay) overlay.classList.remove('show');
+  if(siteContent) siteContent.style.filter='';
   resetIdle();
 }
 overlay.addEventListener('click',wakeUp);
@@ -1571,7 +2651,7 @@ document.addEventListener('keydown',e=>{
 let cpbuf='';
 document.addEventListener('keydown',e=>{
   if(e.key.length===1){cpbuf=(cpbuf+e.key).slice(-3);}
-  if(cpbuf.toLowerCase()==='cpc'){cpbuf='';toast('💬  CHAT PRODUCT COMPANY — BUILDING THE FUTURE  💬',3000);}
+  if(cpbuf.toLowerCase()==='cpc'){cpbuf='';toast('💬  CHAT PRODUCT COMPANY, BUILDING THE FUTURE  💬',3000);}
 });
 
 /* triple-click */
@@ -1587,6 +2667,153 @@ document.addEventListener('click',()=>{
 window.addEventListener('scroll',()=>{
   if(window.scrollY>100&&!window._h1){window._h1=true;toast('🦇  WELCOME TO GOTHAM  🦇',2000);}
 },{once:false,passive:true});
+
+/* ══════════════════════════════════════
+   COMIC BOOK SPREAD FLIP  (REWRITE v3)
+══════════════════════════════════════ */
+function _initComic() {
+  /* ── helpers ── */
+  function qs(sel)  { return document.querySelector(sel); }
+  function qsa(sel) { return Array.prototype.slice.call(document.querySelectorAll(sel)); }
+
+  var spreads = qsa('.comic-spread');
+  var dots    = qsa('.csd');
+  var prevBtn = document.getElementById('comicPrev');
+  var nextBtn = document.getElementById('comicNext');
+  var counter = document.getElementById('pageCounter');
+  var total   = spreads.length;
+
+  if (!total) return;
+
+  var cur = 0;
+
+  function updateUI() {
+    dots.forEach(function (d, i) { d.classList.toggle('on', i === cur); });
+    if (prevBtn) prevBtn.disabled = (cur === 0);
+    if (nextBtn) nextBtn.disabled = (cur === total - 1);
+    if (counter) counter.textContent = 'SPREAD ' + (cur + 1) + ' OF ' + total;
+  }
+
+  function goTo(idx, dir) {
+    if (idx < 0 || idx >= total) return;
+    spreads[cur].classList.remove('active', 'anim-r', 'anim-l');
+    cur = idx;
+    var el = spreads[cur];
+    el.classList.add('active');
+    void el.offsetWidth;
+    el.classList.add(dir === 'next' ? 'anim-r' : 'anim-l');
+    updateUI();
+  }
+
+  /* ── buttons ── */
+  if (prevBtn) prevBtn.addEventListener('click', function () { goTo(cur - 1, 'prev'); });
+  if (nextBtn) nextBtn.addEventListener('click', function () { goTo(cur + 1, 'next'); });
+
+  /* ── dots ── */
+  dots.forEach(function (d, i) {
+    d.addEventListener('click', function () { goTo(i, i > cur ? 'next' : 'prev'); });
+  });
+
+  /* ── keyboard (arrow keys when projects section is visible) ── */
+  document.addEventListener('keydown', function (e) {
+    if (e.key !== 'ArrowRight' && e.key !== 'ArrowLeft') return;
+    var sec = document.getElementById('projects');
+    if (!sec) return;
+    var r = sec.getBoundingClientRect();
+    if (r.bottom < 80 || r.top > window.innerHeight - 80) return;
+    e.preventDefault();
+    if (e.key === 'ArrowRight') goTo(cur + 1, 'next');
+    else                         goTo(cur - 1, 'prev');
+  });
+
+  /* ── touch swipe ── */
+  var wrap = document.getElementById('comicSpreadWrap');
+  if (wrap) {
+    var tx0 = 0;
+    wrap.addEventListener('touchstart', function (e) { tx0 = e.touches[0].clientX; }, { passive: true });
+    wrap.addEventListener('touchend', function (e) {
+      var dx = tx0 - e.changedTouches[0].clientX;
+      if (Math.abs(dx) > 40) { dx > 0 ? goTo(cur + 1, 'next') : goTo(cur - 1, 'prev'); }
+    }, { passive: true });
+  }
+
+  /* ── modal open / close ── */
+  function openModal(pid) {
+    var p = (typeof PROJECTS !== 'undefined') ? PROJECTS[pid] : null;
+    if (!p) { console.warn('No project for pid', pid); return; }
+
+    var mNum   = document.getElementById('mNum');
+    var mTitle = document.getElementById('mTitle');
+    var mBody  = document.getElementById('mBody');
+    var bg     = document.getElementById('modalBg');
+    if (!bg) return;
+
+    if (mNum)   mNum.textContent   = 'PROJECT ' + p.num;
+    if (mTitle) mTitle.textContent = p.title;
+    if (mBody) {
+      mBody.innerHTML =
+        '<p class="modal-desc">' + p.desc + '</p>' +
+        '<div class="modal-section"><div class="modal-section-title">DETAILS</div>' +
+          '<ul class="modal-bullets">' + p.bullets.map(function (b) { return '<li>' + b + '</li>'; }).join('') + '</ul></div>' +
+        '<div class="modal-section"><div class="modal-section-title">KEY METRICS</div>' +
+          '<div>' + p.metrics.map(function (m) { return '<span class="modal-metric">' + m + '</span>'; }).join('') + '</div></div>' +
+        '<div class="modal-section"><div class="modal-section-title">TECH STACK</div>' +
+          '<div class="modal-tags">' + p.tags.map(function (t) { return '<span class="modal-tag">' + t + '</span>'; }).join('') + '</div></div>';
+    }
+    bg.classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeModal() {
+    var bg = document.getElementById('modalBg');
+    if (bg) bg.classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
+  /* ── panel clicks — event delegation on the spread wrap ── */
+  /* This catches clicks on ANY child of .cbpanel by walking up the DOM */
+  var spreadWrap = document.getElementById('comicSpreadWrap');
+  if (spreadWrap) {
+    spreadWrap.addEventListener('click', function (e) {
+      /* walk up from the clicked element to find a .cbpanel with data-pid */
+      var node = e.target;
+      while (node && node !== spreadWrap) {
+        if (node.classList && node.classList.contains('cbpanel') && node.dataset.pid !== undefined) {
+          var pid = parseInt(node.dataset.pid, 10);
+          if (!isNaN(pid)) {
+            /* burst animation */
+            node.classList.remove('burst-active');
+            void node.offsetWidth;
+            node.classList.add('burst-active');
+            setTimeout(function () { node.classList.remove('burst-active'); }, 700);
+            /* open modal after burst peaks */
+            setTimeout(function () { openModal(pid); }, 300);
+          }
+          return; /* stop bubbling search */
+        }
+        node = node.parentNode;
+      }
+    });
+  }
+
+  /* ── modal close wiring ── */
+  var closeBtn = document.getElementById('mClose');
+  var modalBg  = document.getElementById('modalBg');
+  if (closeBtn) closeBtn.addEventListener('click', closeModal);
+  if (modalBg)  modalBg.addEventListener('click', function (e) { if (e.target === modalBg) closeModal(); });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') closeModal(); });
+
+  /* ── init ── */
+  updateUI();
+}
+
+// Run after full DOM is painted
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', _initComic);
+} else {
+  _initComic();
+}
+
 </script>
 </body>
 </html>
